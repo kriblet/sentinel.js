@@ -1,0 +1,42 @@
+.ng-scope {
+    z-index: 55;
+}
+#page-header {
+    z-index: 60;
+    position: relative;
+}
+#page-content-wrapper {
+    z-index: 50;
+}
+
+.ng-leave,
+.ng-enter {
+    overflow: hidden;
+}
+/* page specific animations ------------------------ */
+
+/* home -------------------------- */
+.ng-leave        {
+    -webkit-animation:fadeOutUp 0.5s both ease-in;
+    -moz-animation:fadeOutUp 0.5s both ease-in;
+    animation:fadeOutUp 0.5s both ease-in;
+
+}
+.ng-enter 		{
+    -webkit-animation:scaleUpCenter 0.5s both ease-in;
+    -moz-animation:scaleUpCenter 0.5s both ease-in;
+    animation:scaleUpCenter 0.5s both ease-in;
+    -webkit-animation-delay: 0.5s; /* Chrome, Safari, Opera */
+    animation-delay: 0.5s;
+}
+
+/* scale up */
+@keyframes scaleUp {
+    from 		{ opacity: 0.3; transform: scale(0.8); }
+}
+@-moz-keyframes scaleUp {
+    from 		{ opacity: 0.3; -moz-transform: scale(0.8); }
+}
+@-webkit-keyframes scaleUp {
+    from 		{ opacity: 0.3; -webkit-transform: scale(0.8); }
+}

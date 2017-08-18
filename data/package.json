@@ -1,0 +1,30 @@
+{
+  "name": "peoplemovers-data",
+  "version": "0.0.1",
+  "engines": { "node" : ">=7.10.0", "npm" : ">=4.2.0" },
+  "dependencies": {
+    "async": "^2.4.1",
+    "aws-sdk": "^2.64.0",
+    "dynamoose": "^0.7.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.10.2",
+    "mysql": "^2.13.0",
+    "sequelize": "^3.30.4",
+    "bcrypt": "^1.0.2"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "mocha": "^3.2.0",
+    "should": "^11.2.1"
+  },
+  "scripts": {
+    "test-all": "mocha ./test --timeout 15000",
+    "test-connector": "mocha ./test/connector_spec.js --timeout 15000",
+    "test-models": "mocha ./test/models_spec.js --timeout 15000",
+    "test-watch-all": "mocha -w --timeout 15000",
+    "test-watch-connector": "mocha -w ./test/connector_spec.js --timeout 15000",
+    "test-watch-models": "mocha -w ./test/models_spec.js --timeout 15000"
+  }
+}

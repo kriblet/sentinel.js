@@ -1,0 +1,26 @@
+<div class="container-fluid" ng-controller="usersListController">
+    <div data-widget-group="group1">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <button ng-click="redirect('users/create')" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus"></i> Nuevo Usuario</button>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-default" style="visibility: visible;">
+                    <div class="panel-heading">
+                        <h2>Usuarios</h2>
+                        <div class="panel-ctrls"></div>
+                    </div>
+                    <div class="panel-body no-padding">
+                        <table id="example" class="table table-striped table-bordered"
+                               cellspacing="0" width="100%">
+                        </table>
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- .container-fluid -->

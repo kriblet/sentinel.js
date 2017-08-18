@@ -1,0 +1,6 @@
+
+/* Slidebars */
+
+(function($) {
+    $.slidebars();
+})(jQuery);

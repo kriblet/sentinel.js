@@ -1,0 +1,631 @@
+<!doctype html>
+<html class="no-js" lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="P1crjYdZ2CYvFCufupWsh0IggnpvFP0i8KtLldSABKI" />
+    <title>AgileUI &bull; Premium Bootstrap Admin Dashboard Templates</title>
+
+    
+<!-- This site is optimized with the Yoast SEO plugin v3.2.5 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="Premium Bootstrap Admin Dashboard Templates"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="https://agileui.com" />
+<link rel="publisher" href="https://plus.google.com/b/106366744186313334853/106366744186313334853/about"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="The Ultimate Admin/Front-end Templates Framework" />
+<meta property="og:description" content="Premium Bootstrap Admin Dashboard Templates" />
+<meta property="og:url" content="https://agileui.com" />
+<meta property="og:site_name" content="AgileUI" />
+<meta property="fb:admins" content="100000293662863" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="Premium Bootstrap Admin Dashboard Templates" />
+<meta name="twitter:title" content="AgileUI &bull; Premium Bootstrap Admin Dashboard Templates" />
+<meta name="twitter:site" content="@agileui" />
+<script type='application/ld+json'>{"@context":"http:\/\/schema.org","@type":"WebSite","url":"https:\/\/agileui.com\/","name":"AgileUI","potentialAction":{"@type":"SearchAction","target":"https:\/\/agileui.com\/?s={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<!-- / Yoast SEO plugin. -->
+
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"https:\/\/agileui.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.5.9"}};
+			!function(a,b,c){function d(a){var c,d,e,f=b.createElement("canvas"),g=f.getContext&&f.getContext("2d"),h=String.fromCharCode;if(!g||!g.fillText)return!1;switch(g.textBaseline="top",g.font="600 32px Arial",a){case"flag":return g.fillText(h(55356,56806,55356,56826),0,0),f.toDataURL().length>3e3;case"diversity":return g.fillText(h(55356,57221),0,0),c=g.getImageData(16,16,1,1).data,d=c[0]+","+c[1]+","+c[2]+","+c[3],g.fillText(h(55356,57221,55356,57343),0,0),c=g.getImageData(16,16,1,1).data,e=c[0]+","+c[1]+","+c[2]+","+c[3],d!==e;case"simple":return g.fillText(h(55357,56835),0,0),0!==g.getImageData(16,16,1,1).data[0];case"unicode8":return g.fillText(h(55356,57135),0,0),0!==g.getImageData(16,16,1,1).data[0]}return!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i;for(i=Array("simple","flag","unicode8","diversity"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='mailchimpSF_main_css-css'  href='https://agileui.com/?mcsf_action=main_css&#038;ver=4.5.9' type='text/css' media='all' />
+<!--[if IE]>
+<link rel='stylesheet' id='mailchimpSF_ie_css-css'  href='https://agileui.com/wp-content/plugins/mailchimp/css/ie.css?ver=4.5.9' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='roots_css-css'  href='https://agileui.com/wp-content/themes/aui-theme/assets/css/main.min.css?' type='text/css' media='all' />
+<!-- This site uses the Google Analytics by MonsterInsights plugin v5.5 - Universal enabled - https://www.monsterinsights.com/ -->
+<script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','__gaTracker');
+
+	__gaTracker('create', 'UA-23581568-14', 'auto');
+	__gaTracker('set', 'forceSSL', true);
+	__gaTracker('send','pageview');
+
+</script>
+<!-- / Google Analytics by MonsterInsights -->
+<script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+<link rel='https://api.w.org/' href='https://agileui.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://agileui.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://agileui.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 4.5.9" />
+<meta name="generator" content="WooCommerce 2.5.5" />
+<script>window.jQuery || document.write('<script src="https://agileui.com/wp-content/themes/aui-theme/assets/vendor/jquery/dist/jquery.min.js?1.11.1"><\/script>')</script>
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		
+	<script type="text/javascript" src="//use.typekit.net/jqi3mmb.js"></script>
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+    <link rel="alternate" type="application/rss+xml" title="AgileUI Feed" href="https://agileui.com/feed/">
+</head>
+<body class="home blog">
+
+<!--<div id="snack-bar">
+<div class="container">
+Use coupon <b>specials40</b> at checkout to get a <b>40% discount</b> on all orders.
+</div>
+</div>-->
+<div id="aui-hero">
+  <div id="aui-header" role="banner">
+    <div class="container clearfix">
+      <a class="header-logo" title="Premium Bootstrap Admin Dashboard Templates" href="https://agileui.com/">
+        AgileUI      </a>
+
+      <nav id="main-nav" role="navigation">
+        <ul id="menu-primary-navigation" class="nav navbar-nav"><li class="menu-themes"><a href="https://agileui.com/themes-gallery/">Themes</a></li>
+<li class="menu-bundle"><a href="https://agileui.com/admin-themes-bundle/">Bundle</a></li>
+<li class="menu-affiliates"><a href="https://agileui.com/affiliate-area/">Affiliates</a></li>
+<li class="menu-contact"><a href="https://agileui.com/contact/">Contact</a></li>
+</ul>
+      </nav>
+    </div>
+  </div>
+  
+
+    <div class="container">
+        <h1 class="wow bounceInUp" data-wow-duration="1s">
+            <b>Premium Bootstrap Admin Templates</b>
+        </h1>
+        <h2 style="margin-left:150px; margin-right:150px" class="wow bounceInDown" data-wow-delay="0.3s">Creating Powerful Admin Templates with User-Friendly Interfaces</h2>
+    </div>
+    <a class="hero-img" href="https://agileui.com/themes-gallery/" title="Browse Themes Gallery">
+        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/img/dashboard.png" alt="User-friendly interfaces for web applications and presentation websites" />
+    </a>
+</div>
+
+<div class="container featured-desc">
+    <span class="checkout-feature">
+        <i class="aui-icon icon-check"></i>
+        Responsive design
+    </span>
+    <span class="checkout-feature">
+        <i class="aui-icon icon-check"></i>
+        User Experience tested
+    </span>
+    <span class="checkout-feature">
+        <i class="aui-icon icon-check"></i>
+        Easy to modify and adapt
+    </span>
+    <p class="aui-desc">
+        Our themes offer advanced components, multiple layouts and color schemes, that will help you quickly build beautiful admin dashboards and front-end presentation websites.
+    </p>
+    <p class="aui-desc">
+        Get full control, clear oversight and advanced capacities with our admin templates designed to facilitate the requirements of web developers, designers or freelancers. Designed to help you optimize all administrative aspects of your website’s design, content and functionality with complete ease.
+    </p>
+</div>
+
+<div class="aui-cta-alt">
+    <div class="container">
+        <a href="https://agileui.com/themes-gallery/" class="btn btn-big btn-success display-inline" title="Browse Themes Gallery">
+            Browse Themes
+            <span>Choose the right theme for your web application.</span>
+        </a>
+    </div>
+</div>
+
+<div id="aui-wrapper">
+    <div id="aui-icons">
+        <div class="container">
+            <div class="center-margin row">
+                <div class="col-xs-6">
+                    <div class="icon-box">
+                        <i class="aui-icon icon-diamond wow bounceIn" data-wow-duration="0.8s"></i>
+                        <div class="icon-wrapper">
+                            <h5 class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="0.1s">Flawless Components</h5>
+                            <p class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="0.2s">Our UI kits come packed with over 130 components including Bootstrap, jQuery Widgets, Charts, Plugins and Components.</p>
+                        </div>
+                    </div>
+                    <div class="icon-box">
+                        <i class="aui-icon icon-photo wow bounceIn" data-wow-duration="0.8s" data-wow-delay="0.3s"></i>
+                        <div class="icon-wrapper">
+                            <h5 class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="0.4s">Multiple Layouts &amp; Themes</h5>
+                            <p class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="0.5s">Create your own layout or choose a predefined one. Multiple color schemes are available in each UI kit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="icon-box">
+                        <i class="aui-icon icon-cog wow bounceIn" data-wow-duration="0.8s" data-wow-delay="0.6s"></i>
+                        <div class="icon-wrapper">
+                            <h5 class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="0.7s">Modular Resources</h5>
+                            <p class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="0.8s">All resources are nicely structured so that you can easily include only the things that you will actually use in you project.</p>
+                        </div>
+                    </div>
+                    <div class="icon-box">
+                        <i class="aui-icon icon-graduation-cap wow bounceIn" data-wow-duration="0.8s" data-wow-delay="0.9s"></i>
+                        <div class="icon-wrapper">
+                            <h5 class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="1s">Extensive Documentation</h5>
+                            <p class="wow bounceIn" data-wow-duration="0.6s" data-wow-delay="1.1s">Out themes documentation will guide you through each step of your project with its source code examples and explanations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="featured-hero" data-0="background-position: 50% 0px;" data-450="background-position: 50% -300px;">
+        <div class="hero-inner"></div>
+
+        <div class="tab-content">
+            <div class="tab-pane components-wrapper active" id="components">
+
+                <div class="container clearfix">
+                    <div class="col-xs-7">
+
+                        <h3>
+                            Works perfectly on all devices and web browsers
+                        </h3>
+                        <p>
+                            We've done extensive testing to make sure our user interface framework scales nicely on all devices regardless of their screen size or web browser.
+                        </p>
+                        <a href="https://agileui.com/themes-gallery/" class="btn btn-big btn-outline display-inline" title="Browse Themes Gallery">
+                            Browse Themes Gallery
+                        </a>
+
+                    </div>
+                    <div class="col-xs-3 col-md-push-1" data-top="transform:translateY(80px);" data-bottom="transform:translateY(-580px);">
+                        <div class="bg-holder float-right">
+                            <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/mobile.png" alt="">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div id="aui-checkout">
+
+        <div class="aui-title-big">
+            <h2>Screenshots</h2>
+        </div>
+
+            <div role="tabpanel">
+
+                <div class="container">
+
+                    <ul class="tabs-nav tabs-nav-alt2" role="tablist">
+                        <li class="active">
+                            <a href="#admin-interfaces" role="tab" data-toggle="tab">
+                                Admin Dashboards
+                                <span>Implement modern, user friendly web app dashboards</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#frontend-interfaces" role="tab" data-toggle="tab">
+                                Presentation Websites
+                                <span>Create responsive presentation websites the really easy way.</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="aui-desc" style="text-align: center">
+                        Easy to navigate, visually appealing and fully integrated with state-of-the-art technological features, our responsive templates are guaranteed to improve efficiency and performance. 
+                    </p>
+                </div>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="admin-interfaces">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a1.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a1.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a2.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a2.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a3.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a3.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a4.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a4.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a5.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a5.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a6.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a6.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a7.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a7.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a8.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a8.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a9.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a9.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a10.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a10.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a11.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a11.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a12.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a12.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a13.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a13.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a14.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a14.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a15.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a15.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a16.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a16.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a17.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a17.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a18.jpg" title="Admin User Interfaces Dashboard"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/a18.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="frontend-interfaces">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f1.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f1.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f2.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f2.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f3.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f3.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f4.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f4.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f5.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f5.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f6.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f6.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f7.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f7.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f8.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f8.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f9.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f9.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f10.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f10.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f11.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f11.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="thumbnail-box-wrapper">
+                                    <div class="thumbnail-box">
+                                        <a class="thumb-link fancybox" rel="admin-ui" href="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f12.jpg" title="Front-end User Interfaces"></a>
+                                        <img src="https://agileui.com/wp-content/themes/aui-theme/assets/images/screenshots/f12.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+
+    <div class="container featured-desc" style="padding-top:25px">
+       
+        
+        <p class="aui-desc">
+            From comprehensive statistics, to social media integration, Google maps and much more, all features are adaptable to specifically complement and support your website. 
+        </p>
+        <p class="aui-desc">
+            Try a AgileUI template today for easy to use yet robust admin templates. 
+        </p>
+    </div>
+
+<div id="aui-footer-nav">
+    <div class="container clearfix">
+        <ul id="menu-primary-navigation-1" class="nav navbar-nav"><li class="menu-themes"><a href="https://agileui.com/themes-gallery/">Themes</a></li>
+<li class="menu-bundle"><a href="https://agileui.com/admin-themes-bundle/">Bundle</a></li>
+<li class="menu-affiliates"><a href="https://agileui.com/affiliate-area/">Affiliates</a></li>
+<li class="menu-contact"><a href="https://agileui.com/contact/">Contact</a></li>
+</ul>    </div>
+</div>
+<div id="agileui-footer">
+    <div class="container clearfix">
+        <div class="row">
+            <div class="col-xs-5 about-us">
+                <a class="header-logo" title="Premium Bootstrap Admin Dashboard Templates" href="#top">
+                    AgileUI                </a>
+                <p>Our mission is to create beautiful, usable and easy to integrate user interface kits for both application dashboards and presentation websites. We're constantly adding new features, improving existing ones and taking into consideration customers feedback.</p>
+            </div>
+	    <div class="col-xs-3"></div>
+            <div class="col-xs-4 aui-social-share">
+                <h5>Spread the word</h5>
+
+                <div class="aui-follow">
+                    <a href="https://twitter.com/AgileUI" target="_blank" title="Follow AgileUI on Twitter" class="social-icon icn-twitter">Follow AgileUI on Twitter</a>
+                    <a href="https://www.facebook.com/AgileUI" target="_blank" title="Follow AgileUI on Facebook" class="social-icon icn-facebook">Follow AgileUI on Facebook</a>
+                    <a href="https://plus.google.com/+AgileUI" target="_blank" title="Follow AgileUI on Google+" class="social-icon icn-google">Follow AgileUI on Google+</a>
+                    <a href="https://www.pinterest.com/AgileUI" target="_blank" title="Follow AgileUI on Pinterest" class="social-icon icn-pinterest">Follow AgileUI on Pinterest</a>
+                    <a href="https://dribbble.com/AgileUI" target="_blank" title="Follow AgileUI on Dribbble" class="social-icon icn-dribbble">Follow AgileUI on Dribbble</a>
+<!--                <a href="http://agileui.tumblr.com" target="_blank" title="Follow AgileUI on Tumblr">Read our blog</a>-->
+                </div>
+                <!-- <div class="v-spacing">
+                    <div class="fb-like" data-href="https://agileui.com" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                </div>
+                <div class="v-spacing">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-via="twitterapi" data-lang="en">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                </div>
+                <div class="v-spacing">
+                    <a href="//www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fagileui.com&media=https%3A%2F%2Fagileui.com%2Fpinterest-image.jpg&description=The%20Ultimate%20User%20Interface%20Framework" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="white"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_white_20.png" /></a>
+                    <script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>
+                </div>
+                <div class="v-spacing">
+                    <script src="https://apis.google.com/js/platform.js" async defer></script>
+                    <div class="g-plus" data-action="share" data-annotation="bubble" data-href="https://agileui.com"></div>
+                </div> -->
+            </div>
+            <!--<div class="col-xs-3 aui-newsletter">-->
+                <!-- <h5>Newsletter signup</h5>-->
+                <!-- <p>You'll receive a 20% discount coupon when you sign up.</p> -->
+		<!--<form action="https://gumroad.com/follow_from_embed_form" class="form gumroad-follow-form-embed" method="post">
+			<input name="seller_id" type="hidden" value="8751982272515">
+			<input name="email" placeholder="Your email address" type="email">
+			<div class="clear"><button type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn">Subscribe Now</button></div>-->
+			<!--<button data-custom-highlight-color="" type="submit">Follow</button>-->
+		<!--</form>-->
+                <!-- Begin MailChimp Signup Form -->
+                <!-- <div id="mc_embed_signup">
+                    <form action="//agileui.us8.list-manage.com/subscribe/post?u=a50485eb1af271e93b5a0828a&amp;id=48c0114e7e" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+
+                        <div class="mc-field-group">
+                            <label for="mce-EMAIL">Email address:</label>
+                            <input type="email" placeholder="Your email address here..." value="" name="EMAIL" class="required email" id="mce-EMAIL">
+                        </div>
+                        <div id="mce-responses" class="clear">
+                            <div class="response" id="mce-error-response" style="display:none"></div>
+                            <div class="response" id="mce-success-response" style="display:none"></div>
+                        </div>
+                        <div style="position: absolute; left: -5000px;"><input type="text" name="b_a50485eb1af271e93b5a0828a_48c0114e7e" tabindex="-1" value=""></div>
+                        <div class="clear"><button type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn">Subscribe Now</button></div>
+                    </form>
+                </div> -->
+                <!--End mc_embed_signup-->
+            <!--</div>-->
+        </div>
+
+
+
+    </div>
+</div>
+<div id="agileui-copy">
+    <div class="container clearfix">
+        <div class="float-left">
+            This website was created using the <a href="https://agileui.com/bootstrap-admin-themes-features-benefits/the-aui-framework/" title="View features for The AUI Framework">AUI Framework Themes</a>
+        </div>
+        <div class="float-right">Copyright &copy; 2015 - 2016 - agileui.com</div>
+    </div>
+</div>
+<script type='text/javascript' src='//agileui.com/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.70'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var woocommerce_params = {"ajax_url":"\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/?wc-ajax=%%endpoint%%"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='//agileui.com/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=2.5.5'></script>
+<script type='text/javascript' src='//agileui.com/wp-content/plugins/woocommerce/assets/js/jquery-cookie/jquery.cookie.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wc_cart_fragments_params = {"ajax_url":"\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/?wc-ajax=%%endpoint%%","fragment_name":"wc_fragments"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='//agileui.com/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=2.5.5'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var angelleye_frontend = {"is_product":"no","is_cart":"no","is_checkout":"no","three_digits":"3 digits usually found on the signature strip.","four_digits":"4 digits usually found on the front of the card."};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://agileui.com/wp-content/plugins/paypal-for-woocommerce/assets/js/angelleye-frontend.js?ver=2.5.5'></script>
+<script type='text/javascript' src='https://agileui.com/wp-content/themes/aui-theme/assets/js/scripts.min.js?'></script>
+<script type='text/javascript' src='https://agileui.com/wp-includes/js/wp-embed.min.js?ver=4.5.9'></script>
+
+<script type="text/javascript">
+    new WOW().init();
+</script>
+<script type="text/javascript">
+    if(!(/Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i).test(navigator.userAgent || navigator.vendor || window.opera)){
+        skrollr.init({
+            forceHeight:false,
+            smoothScrolling:true
+        });
+    }
+</script>
+
+</body>
+</html>

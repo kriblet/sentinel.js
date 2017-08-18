@@ -1,0 +1,86 @@
+<div class="page-content-inner" ng-controller="userController">
+    <!-- Basic Form Elements -->
+    <section class="panel">
+        <div class="panel-heading">
+            <h3>{{editing ? 'Edición' : 'Registro'}} de Usuarios</h3>
+            <span class="pull-right"><button ng-click="newUser = {};status = null; result = null;" class="btn btn-sm btn-default">Clear</button></span>
+            <div class="panel-ctrls" data-actions-container="" data-action-collapse='{"target": ".panel-body"}'></div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="margin-bottom-50">
+                        <h4>Horizontal Form</h4>
+                        <br />
+                        <!-- Horizontal Form -->
+                        <form id="user-form" name="user-form" ng-submit="saveUser();">
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input name="user-form[username]"
+                                       type="text"
+                                       minlength="6"
+                                       class="form-control"
+                                       data-validation="[NOTEMPTY]">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input name="user-form[password]"
+                                       type="password"
+                                       minlength="6"
+                                       class="form-control"
+                                       data-validation="[NOTEMPTY]">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input name="user-form[email]"
+                                       type="email"
+                                       class="form-control"
+                                       data-validation="[EMAIL]">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Select</label>
+                                <select name="user-form[type]"
+                                        class="form-control"
+                                        data-validation="[NOTEMPTY]">
+                                    <option value="">Select type</option>
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Select2</label>
+                                <select name="user-form[color]"
+                                        class="form-control select2"
+                                        data-validation="[NOTEMPTY]">
+                                    <option value="">Select type</option>
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary width-150">Validate</button>
+                                <button type="button" class="btn btn-default" onclick="$('#form-user-form').removeError();">Clear</button>
+                            </div>
+                        </form>
+                        <!-- End Horizontal Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    $(function(){
+
+        $('.select2').select2();
+        $('.select2-tags').select2({
+            tags: true,
+            tokenSeparators: [',', ' ']
+        });
+
+    });
+</script>

@@ -1,0 +1,28 @@
+{
+  "name": "peoplemovers-realtime-service",
+  "version": "0.0.1",
+  "engines": { "node" : ">=7.10.0", "npm" : ">=4.2.0" },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "compression": "^1.6.2",
+    "express": "^4.15.3",
+    "socket.io": "^2.0.2",
+    "bcrypt": "^1.0.2"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "should": "^11.2.1",
+    "socket.io-client": "^2.0.2"
+  },
+  "scripts": {
+    "test-all": "mocha ./test --timeout 15000",
+    "test-peoplemoversUser": "mocha ./test/peoplemoversUser_spec.js --timeout 15000",
+    "test-ServiceApplication_spec": "mocha ./test/ServiceApplication_spec.js --timeout 15000",
+    "test-watch-peoplemoversUser": "mocha ./test/peoplemoversUser_spec.js -w --timeout 15000",
+    "test-watch-ServiceApplication_spec": "mocha ./test/ServiceApplication_spec.js -w --timeout 15000"
+  }
+}
