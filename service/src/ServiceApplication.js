@@ -44,6 +44,7 @@ class ServiceApplication {
         self.app.use( bodyParser.json() );
         self.app.use( bodyParser.urlencoded({"extended": false}) );
 
+        console.log(self.config.host);
         self.app.use(`/${self.config.host.webserverRoute}`, express.static(self.config.directories.webApp));
 
         /* Set default headers for express api app */
@@ -221,7 +222,6 @@ class ServiceApplication {
                     }else if(params){
                         endpoints.push(endpointBase + '/' + key + '/:' + params);
                     }
-                    console.log('added=>',endpoints);
                     self.app[httpControllersController.type](endpoints, httpControllersController.middleware || null, httpControllersController.worker);
                 });
             });
