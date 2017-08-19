@@ -1,6 +1,0 @@
-
-/* Slidebars */
-
-(function($) {
-    $.slidebars();
-})(jQuery);
