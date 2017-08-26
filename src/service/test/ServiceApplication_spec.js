@@ -5,7 +5,7 @@
 
 const should                = require('should'),
     async                   = require('async'),
-    conf                    = require('../../config').development,
+    conf                    = require('../../../config/index').development,
     ServiceApplication      = require(`${__dirname}/..`),
     emulator                = require(`${__dirname}/../emulator`);
 

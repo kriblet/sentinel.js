@@ -36,9 +36,21 @@ module.exports = (sqlConnector, service, callback)=>{
                 /**
                  * creates each model instance
                  */
-                models[modelName.replace(".js","")] = require(`${__dirname}/${modelName}`)(sqlConnector.getConnection(), Sequelize.DataTypes);
+                let model = require(`${_directory}/${modelName}`)(sqlConnector.getConnection(), Sequelize.DataTypes, service);
+                models[modelName.replace(".js","")] = model.model;
+                models[modelName.replace(".js","")].isPublic = model.public || false;
             }
         });
+        if (service.config.directories.models && service.config.directories.models.sql){
+            service.config.directories.models.sql.forEach((customRoute)=>{
+                let customModels = fs.readdirSync(customRoute);
+                customModels.forEach((customModelName)=>{
+                    let model = require(`${customRoute}/${customModelName}`)(sqlConnector.getConnection(), Sequelize.DataTypes, service);
+                    models[customModelName.replace(".js","")] = model.model;
+                    models[customModelName.replace(".js","")].isPublic = model.public || false;
+                })
+            })
+        }
 
         let response = {};
         response.sql = models;
@@ -53,7 +65,9 @@ module.exports = (sqlConnector, service, callback)=>{
                         /**
                          * creates each model instance
                          */
-                        models[modelName.replace(".js","")] = require(`${_directory}/${modelName}`)(sqlConnector.getConnection(), Sequelize.DataTypes);
+                        let model = require(`${_directory}/${modelName}`)(sqlConnector.getConnection(), Sequelize.DataTypes, service);
+                        models[modelName.replace(".js","")] = model.model;
+                        models[modelName.replace(".js","")].isPublic = model.public || false;
                     }
                 });
                 response[objectName] = models;

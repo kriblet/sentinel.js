@@ -7,10 +7,10 @@ let listControllers = (service)=>{
     return [{
         /**
          * Event get gets from model by filters
-         * send an acknowledge response to client with the list of items.
+         * send an sendResponsenowledge response to client with the list of items.
          */
         event: 'find',
-        worker: (args, ack)=> {
+        worker: (args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -21,7 +21,7 @@ let listControllers = (service)=>{
              * args.sort = {} || String | contains the sort for the results, default is -createdAt
              * */
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
@@ -33,19 +33,25 @@ let listControllers = (service)=>{
             args.sort = args.sort || {createdAt: -1};
             args.populate = args.populate || [];
 
+            if (!service.models.mongodb[args.model]){
+                // todo: model not found;
+            }else if(!service.models.mongodb[args.model].isPublic){
+                // todo: forbidden
+            }
+
             service.models.mongodb[args.model].find(args.query).select(args.select).limit(args.limit).skip(args.skip).sort(args.sort).populate(args.populate).lean()
                 .exec((err, items) => {
                     if (err) {
                         console.log( 'find', err);
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: false,
                             error: err
                         });
                     } else {
                         console.log("find successfully");
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: true,
                             data: items
                         });
@@ -56,10 +62,10 @@ let listControllers = (service)=>{
     },{
         /**
          * Event get gets from model by filters
-         * send an acknowledge response to client with the list of items.
+         * send an sendResponsenowledge response to client with the list of items.
          */
         event: 'findOne',
-        worker: (args, ack)=> {
+        worker: (args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -70,7 +76,7 @@ let listControllers = (service)=>{
              * args.sort = {} || String | contains the sort for the results, default is -createdAt
              * */
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
@@ -84,14 +90,14 @@ let listControllers = (service)=>{
                     if (err) {
                         console.log( 'findOne', err);
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: false,
                             error: err
                         });
                     } else {
                         console.log("findOne successfully");
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: true,
                             data: items
                         });
@@ -102,10 +108,10 @@ let listControllers = (service)=>{
     },{
         /**
          * Event get gets from model by filters
-         * send an acknowledge response to client with the list of items.
+         * send an sendResponsenowledge response to client with the list of items.
          */
         event: 'findById',
-        worker: (args, ack)=> {
+        worker: (args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -116,7 +122,7 @@ let listControllers = (service)=>{
              * args.sort = {} || String | contains the sort for the results, default is -createdAt
              * */
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
@@ -130,14 +136,14 @@ let listControllers = (service)=>{
                     if (err) {
                         console.log( 'findById', err);
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: false,
                             error: err
                         });
                     } else {
                         console.log("findById successfully");
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: true,
                             data: items
                         });
@@ -148,18 +154,18 @@ let listControllers = (service)=>{
     },{
         /**
          * Event save saves an item and
-         * send an acknowledge response to client with isValid true or false with error.
+         * send an sendResponsenowledge response to client with isValid true or false with error.
          */
         event: 'save',
-        worker: (args, ack)=>{
+        worker: (args, sendResponse)=>{
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
             }
             if (!args.data ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No data given.'
                 });
@@ -170,7 +176,7 @@ let listControllers = (service)=>{
                 if (err){
                     console.log( 'save', err);
                     /* by convention structure for responses*/
-                    ack({
+                    sendResponse({
                         isValid: false,
                         error: err
                     });
@@ -182,7 +188,7 @@ let listControllers = (service)=>{
                     if (returnItem.password){
                         returnItem.password = '****';
                     }
-                    ack({
+                    sendResponse({
                         isValid: true,
                         item: returnItem
                     });
@@ -192,7 +198,7 @@ let listControllers = (service)=>{
         }
     },{
         event: 'findByIdAndUpdate',
-        worker: (args, ack)=> {
+        worker: (args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -200,19 +206,19 @@ let listControllers = (service)=>{
              * args.new = {} new object with fields to save
              * */
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
             }
             if (!args.new ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No new data given.'
                 });
             }
             if (!args.new._id){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No _id found in new data.'
                 });
@@ -224,7 +230,7 @@ let listControllers = (service)=>{
                     console.error(err);
                     console.log( 'findByIdAndUpdate', err);
                     /* by convention structure for responses*/
-                    ack({
+                    sendResponse({
                         isValid: false,
                         error: err
                     });
@@ -237,14 +243,14 @@ let listControllers = (service)=>{
 
                         data.save((err)=>{
                             if (err) {
-                                ack({
+                                sendResponse({
                                     isValid: false,
                                     error: err
                                 });
                             }else{
                                 console.log("Saved successfully");
                                 /* by convention structure for responses*/
-                                ack({
+                                sendResponse({
                                     isValid: true
                                 });
                                 let returnItem = data.toObject();
@@ -256,7 +262,7 @@ let listControllers = (service)=>{
                             }
                         })
                     }else{
-                        ack({
+                        sendResponse({
                             isValid: false,
                             error: 'id not found'
                         });
@@ -267,7 +273,7 @@ let listControllers = (service)=>{
         }
     },{
         event: 'findByIdAndDelete',
-        worker: (args, ack)=> {
+        worker: (args, sendResponse)=> {
             let self = this;
             /*
              * available args are.
@@ -275,19 +281,19 @@ let listControllers = (service)=>{
              * args.data = {} object to delete
              * */
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
             }
             if (!args.data ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No new data given.'
                 });
             }
             if (!args.data._id){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No _id found in new data.'
                 });
@@ -298,7 +304,7 @@ let listControllers = (service)=>{
                     console.error(err);
                     console.log( 'findByIdAndUpdate', err);
                     /* by convention structure for responses*/
-                    ack({
+                    sendResponse({
                         isValid: false,
                         error: err
                     });
@@ -308,14 +314,14 @@ let listControllers = (service)=>{
                         data.active = false;
                         data.save((err)=>{
                             if (err) {
-                                ack({
+                                sendResponse({
                                     isValid: false,
                                     error: err
                                 });
                             }else{
                                 console.log("Saved successfully");
                                 /* by convention structure for responses*/
-                                ack({
+                                sendResponse({
                                     isValid: true
                                 });
                                 let returnItem = data.toObject();
@@ -327,7 +333,7 @@ let listControllers = (service)=>{
                             }
                         })
                     }else{
-                        ack({
+                        sendResponse({
                             isValid: false,
                             error: 'id not found'
                         });
@@ -337,15 +343,15 @@ let listControllers = (service)=>{
         }
     },{
         event: 'autocomplete',
-        worker: (args, ack)=> {
+        worker: (args, sendResponse)=> {
             if (!args.model ){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No model given.'
                 });
             }
             if (!args.query){
-                return ack({
+                return sendResponse({
                     isValid: false,
                     error: 'No query given.'
                 });
@@ -376,14 +382,14 @@ let listControllers = (service)=>{
                     if (err) {
                         console.log( 'find', err);
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: false,
                             error: err
                         });
                     } else {
                         console.log("find successfully");
                         /* by convention structure for responses*/
-                        ack({
+                        sendResponse({
                             isValid: true,
                             data: items
                         });

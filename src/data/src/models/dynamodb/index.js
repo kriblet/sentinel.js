@@ -35,12 +35,24 @@ module.exports = (dynamodbConnector, service, callback)=>{
                 /**
                  * creates each model instance
                  */
-                models[modelName.replace(".js","")] = require(`${__dirname}/${modelName}`)(dynamodbConnector.getConnection(), dynamoose);
+                let model = require(`${_directory}/${modelName}`)(dynamodbConnector.getConnection(), dynamoose, service);
+                models[modelName.replace(".js","")] = model.model;
+                models[modelName.replace(".js","")].isPublic = model.public;
             }
         });
+        if (service.config.directories.models && service.config.directories.models.dynamo){
+            service.config.directories.models.dynamo.forEach((customRoute)=>{
+                let customModels = fs.readdirSync(customRoute);
+                customModels.forEach((customModelName)=>{
+                    let model = require(`${customRoute}/${customModelName}`)(dynamodbConnector.getConnection(), dynamoose, service);
+                    models[customModelName.replace(".js","")] = model.model;
+                    models[customModelName.replace(".js","")].isPublic = model.public;
+                })
+            })
+        }
 
         let response = {};
-        response.mongodb = models;
+        response.dynamo = models;
         /**
          * checks if there is connection specific models.
          */
@@ -52,7 +64,9 @@ module.exports = (dynamodbConnector, service, callback)=>{
                         /**
                          * creates each model instance
                          */
-                        models[modelName.replace(".js","")] = require(`${_directory}/${modelName}`)(dynamodbConnector.getConnection(), dynamoose);
+                        let model = require(`${_directory}/${modelName}`)(dynamodbConnector.getConnection(), dynamoose, service);
+                        models[modelName.replace(".js","")] = model.model;
+                        models[modelName.replace(".js","")].isPublic = model.public;
                     }
                 });
                 response[objectName] = models;

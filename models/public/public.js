@@ -7,5 +7,8 @@ module.exports =  function(connection, mongoose, service) {
         public: Boolean
     });
 
-    return connection.model('public',publicSchema);
+    return {
+        model: connection.model('public', publicSchema),
+        public: true
+    }
 };

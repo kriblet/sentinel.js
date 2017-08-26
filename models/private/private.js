@@ -7,5 +7,8 @@ module.exports =  function(connection, mongoose, service){
         private: Boolean
     };
 
-    return connection.model('private', privateSchema);
+    return {
+        model: connection.model('private', privateSchema),
+        public: false
+    };
 };
