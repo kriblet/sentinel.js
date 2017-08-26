@@ -2,8 +2,8 @@
  * Created by Ben on 02/06/2017.
  */
 const express           = require("express"),
-    Security            = require(`${__dirname}/security`),
-    io                  = require("socket.io"),
+    ioHandler           = require(`${__dirname}/modules/ioHandler`),
+    Security            = require(`${__dirname}/modules/security`),
     app                 = express(),
     http                = require('http'),
     compression         = require('compression'),
@@ -11,19 +11,18 @@ const express           = require("express"),
     server              = http.createServer(app),
     os                  = require('os'),
     fs                  = require('fs'),
-    conf                = require(`${__dirname}/../../config`),
     data                = require(`${__dirname}/../../data`),
-    _                   = require('lodash'),
-    connectors =        new data.Connector(conf.development.db /* db configuration for development */);
+    _                   = require('lodash');
+
 
 
 /**
  * Service application to listen all users providing an idle connection until they got any kind of notifications.
  */
 class ServiceApplication {
-    constructor(config = null){
+    constructor(options = null){
         this.app = app;
-        this.config(config);
+        this.config(options.config);
         this.server = server;
         this.hostname = os.hostname();
     }
@@ -44,7 +43,6 @@ class ServiceApplication {
         self.app.use( bodyParser.json() );
         self.app.use( bodyParser.urlencoded({"extended": false}) );
 
-        console.log(self.config.host);
         self.app.use(`/${self.config.host.webserverRoute}`, express.static(self.config.directories.webApp));
 
         /* Set default headers for express api app */
@@ -61,11 +59,16 @@ class ServiceApplication {
         let self = this;
         return new Promise((resolve,reject)=> {
             /*Connects to mongodb database (name of db config)*/
-            self.mongoConnector = connectors.connectors.mongodb;
+            self.connectors =        new data.Connector(self.config.db /* db configuration for development */);
+
+            self.mongoConnector = self.connectors.connectors.mongodb;
             self.mongoConnector.connect()
                 .then(() => {
+                    if (self.config.usersEngine || true) {
+                        self.config.directories.models.mongodb.push(`${__dirname}/modules/users/models`);
+                    }
                     /*Prepares all models existing in folder models... with extension of name sql / mongodb */
-                    data.Models.prepare(connectors.connectors, self)
+                    data.Models.prepare(self.connectors.connectors, self)
                         .then((models) => {
                             /* This models are available as the example in tests
                              *
@@ -73,15 +76,14 @@ class ServiceApplication {
                              notifications = self.models.mongodb.notifications;
                              * */
                             self.models = models;
-                            self.security = new Security();
+                            self.security = new Security(self);
                             self.security.use(self.models);
-                            self.sethttpControllers();
+                            self.setHttpControllers();
                             self.setIo();
                             /* Starts the app */
                             let port = process.env.PORT || self.config.port || 8081;
                             self.server.listen(port, () => {
-                                console.log(`Server ready and listening in ws://${self.hostname}:${port}, 
-                                                Admin Panel is in http://${self.hostname}:${port}/${self.config.host.webserverRoute}`);
+                                console.log(`Server ready at http://${self.hostname}:${port}/${self.config.host.webserverRoute}`);
                                 self.status = "Running";
                                 resolve();
                             });
@@ -90,10 +92,7 @@ class ServiceApplication {
                         .catch(reject);
                 })
                 .catch(reject);
-
-
         });
-
     }
 
 
@@ -101,104 +100,28 @@ class ServiceApplication {
      *  set up all needed configuration for socket io.
      */
     setIo(){
-        let self = this;
-
-        self.io = io.listen(self.server);
-
-        // attach events from api to io clients
-        let apiFiles = fs.readdirSync(`${__dirname}/api`),
-            apiControllers = [];
-        apiFiles.forEach((apiFile)=>{
-            /*requires each api controller in directory*/
-            apiControllers.push(require(`${__dirname}/api/${apiFile}`)(self));
-        });
-
-        if (self.config.directories.controllers){
-            let customApiFiles = [];
-            if (self.config.directories.controllers.constructor === Array){
-                self.config.directories.controllers.forEach((customApiRoute)=>{
-                    customApiFiles.push({route: customApiRoute, files: fs.readdirSync(customApiRoute)});
-                })
-            }else{
-                customApiFiles.push({route: self.config.directories.controllers, files: fs.readdirSync(self.config.directories.controllers)});
-            }
-            customApiFiles.forEach((customController)=>{
-                customController.files.forEach((customControllerFile)=>{
-                    apiControllers.push(require(`${customController.route}/${customControllerFile}`)(self));
-                })
-            });
-        }
-
-        // security middleware
-        self.io.use(self.security.middleware);
-        self.connections = {};
-        /* What to do if some user is connected? */
-        self.io.sockets.on('connection', function (client) {
-            if (client.user && client.user.me) {
-                if (!self.connections[client.user.me._id]){
-                    self.connections[client.user.me._id] = [];
-                }
-                self.connections[client.user.me._id].push(client);
-            }
-            /*for each controller registered in api, attach the event and worker*/
-            apiControllers.forEach((apiController)=>{
-                if (apiController.constructor === Array){
-                    apiController.forEach((apiConrollerMember)=>{
-                        if (!client.user && !client.user.me && !apiConrollerMember.public) {
-                            return;
-                        }
-                        client.on(apiConrollerMember.event, (args, ack)=> {
-                            if (client.user && client.user.me) {
-                                console.log("User authenticated");
-                                client.user.session.validAt = new Date();
-                                client.user.session.save((err)=>{console.log("update session",err)});
-                            }
-                            apiConrollerMember.worker(args, ack);
-                        });
-                    })
-                }else {
-                    if (!client.user && !client.user.me && !apiController.public) {
-                        return;
-                    }
-                    client.on(apiController.event, (args, ack)=> {
-                        if (client.user && client.user.me) {
-                            console.log("User authenticated");
-                            client.user.session.validAt = new Date();
-                            client.user.session.save((err)=>{console.log("update session",err)});
-                        }
-                        apiController.worker(args, ack);
-                    });
-                }
-            });
-
-            if (client.user && client.user.me) {
-                let _me = client.user.me.toObject();
-                _me.password = '****';
-
-                client.emit('welcome', {isValid: true, user: _me, session: client.user.session.toObject()});
-            }
-
-            client.on('disconnect', () => {
-                if (client.user && client.user.me) {
-                    _.remove(self.connections[client.user.me._id], function (currConnection) {
-                        return currConnection.id === client.id;
-                    });
-                }
-                client.disconnect();
-            });
-        });
+        ioHandler(this);
     }
 
-    sethttpControllers(){
+    setHttpControllers(){
         let self = this;
+        self.existingRoutes = {};
+
         if (!self.config.directories.httpControllers){
             return;
         }
+        self._setHttpControllers(self.config.directories.httpControllers);
+    }
 
-        self.config.directories.httpControllers.forEach((apiRoute)=>{
+    _setHttpControllers(directories){
+        let self = this;
+        directories.forEach((apiRoute)=>{
             let apiFiles = fs.readdirSync(`${apiRoute}`);
             apiFiles.forEach((apiFile)=>{
                 if (apiFile.indexOf('.js') === -1){
+                    return self._setHttpControllers([`${directories}/${apiFile}`]);
+                }
+                if (apiFile.indexOf('.controller') === -1){
                     return;
                 }
 
@@ -222,12 +145,20 @@ class ServiceApplication {
                     }else if(params){
                         endpoints.push(endpointBase + '/' + key + '/:' + params);
                     }
-                    self.app[httpControllersController.type](endpoints, httpControllersController.middleware || null, httpControllersController.worker);
+
+                    if (!self.existingRoutes[httpControllersController.type || 'get']){
+                        self.existingRoutes[httpControllersController.type || 'get'] = [];
+                    }else{
+                        let found = _.intersection(self.existingRoutes[httpControllersController.type || 'get'], endpoints);
+                        if (found){
+                            throw new Error(`Routes already defined ${found.join(" | ")}` );
+                        }
+                    }
+                    self.existingRoutes[httpControllersController.type || 'get'] = self.existingRoutes[httpControllersController.type || 'get'].concat(endpoints);
+                    self.app[httpControllersController.type || 'get'](endpoints, httpControllersController.middleware || null, httpControllersController.worker);
                 });
             });
         });
-
-
     }
 
     broadcast(_event, _data){

@@ -2,10 +2,12 @@
  * Created by Ben on 03/06/2017.
  */
 
-const config = require(`${__dirname}/../../../config`),
-    bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 class Security{
+    constructor(service){
+        this.service = service;
+    }
     get middleware(){
         let self = this;
         return (socket, next) => {
@@ -129,7 +131,7 @@ class Security{
 
                             }else{
                                 let action = socket.handshake.headers['x-action'].toLowerCase();
-                                if (config.actions.indexOf(action) > -1){
+                                if (this.service.config.actions.indexOf(action) > -1){
                                     socket.user = null;
                                     socket.action = action;
                                     return next();

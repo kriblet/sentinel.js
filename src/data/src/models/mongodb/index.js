@@ -10,6 +10,7 @@ const fs = require("fs"),
 /**
  * returns all models for mongodb connection
  * @param mongodbConnector
+ * @param service
  * @param callback
  */
 module.exports = (mongodbConnector, service, callback)=>{
@@ -35,14 +36,19 @@ module.exports = (mongodbConnector, service, callback)=>{
                 /**
                  * creates each model instance
                  */
-                models[modelName.replace(".js","")] = require(`${__dirname}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                let model = require(`${_directory}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                models[modelName.replace(".js","")] = model.model;
+                models[modelName.replace(".js","")].isPublic = model.public;
+
             }
         });
         if (service.config.directories.models && service.config.directories.models.mongodb){
             service.config.directories.models.mongodb.forEach((customRoute)=>{
                 let customModels = fs.readdirSync(customRoute);
                 customModels.forEach((customModelName)=>{
-                    models[customModelName.replace(".js","")] = require(`${customRoute}/${customModelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                    let model = require(`${customRoute}/${customModelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                    models[customModelName.replace(".js","")] = model.model;
+                    models[customModelName.replace(".js","")].isPublic = model.public;
                 })
             })
         }
@@ -60,7 +66,9 @@ module.exports = (mongodbConnector, service, callback)=>{
                         /**
                          * creates each model instance
                          */
-                        models[modelName.replace(".js","")] = require(`${_directory}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                        let model = require(`${_directory}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                        models[modelName.replace(".js","")] = model.model;
+                        models[modelName.replace(".js","")].isPublic = model.public;
                     }
                 });
                 response[objectName] = models;
