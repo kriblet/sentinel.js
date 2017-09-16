@@ -35,6 +35,14 @@ require('yargs') // eslint-disable-line no-unused-expressions
             init.restart()
         }
     })
+    .command({
+        command: 'hello-world',
+        alias: ['hello-world'],
+        desc: 'Download and Runs Sentinel.js Hello-World project',
+        handler: argv => {
+            init.helloWorld()
+        }
+    })
     .recommendCommands()
     .demandCommand(1, 'You must provide one of the accepted commands above.')
     .help()

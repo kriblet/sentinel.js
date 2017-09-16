@@ -12,18 +12,22 @@ const path = require('path');
 
 const ROOTPATH = process.cwd();
 
+let printSentinel = function(){
+    console.log("\n" +
+        "   _____            _   _            _       _  _____ \n" +
+        "  / ____|          | | (_)          | |     | |/ ____|\n" +
+        " | (___   ___ _ __ | |_ _ _ __   ___| |     | | (___  \n" +
+        "  \\___ \\ / _ \\ '_ \\| __| | '_ \\ / _ \\ | _   | |\\___ \\ \n" +
+        "  ____) |  __/ | | | |_| | | | |  __/ || |__| |____) |\n" +
+        " |_____/ \\___|_| |_|\\__|_|_| |_|\\___|_(_)____/|_____/ \n" +
+        "                                                      \n" +
+        "                                                      \n");
+};
+
 let server = {
     start: function(){
-        console.log("\n" +
-            "   _____            _   _            _       _  _____ \n" +
-            "  / ____|          | | (_)          | |     | |/ ____|\n" +
-            " | (___   ___ _ __ | |_ _ _ __   ___| |     | | (___  \n" +
-            "  \\___ \\ / _ \\ '_ \\| __| | '_ \\ / _ \\ | _   | |\\___ \\ \n" +
-            "  ____) |  __/ | | | |_| | | | |  __/ || |__| |____) |\n" +
-            " |_____/ \\___|_| |_|\\__|_|_| |_|\\___|_(_)____/|_____/ \n" +
-            "                                                      \n" +
-            "                                                      \n");
         let spinner = ora('Initializing...').start();
+        printSentinel();
         return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
             return pm2.connectAsync().then(() => {
                 return pm2.startAsync({
@@ -52,7 +56,7 @@ let server = {
         });
     },
     stop: function(){
-        let spinner = ora('Shutting down Sentinel.js...').start()
+        let spinner = ora('Shutting down Sentinel.js...').start();
         return pm2.connectAsync().then(() => {
             return pm2.stopAsync('sentinel').then(() => {
                 spinner.succeed('Sentinel.js has stopped successfully.');
@@ -69,6 +73,13 @@ let server = {
         return self.stop().delay(1000).then(() => {
             self.start();
         })
+    },
+    helloWorld: function(){
+        printSentinel();
+        let spinner = ora('Working on it yet.').start();
+        console.log("\n¯\\_(ツ)_/¯");
+        spinner.fail('Sentinel.js not ready for hello-world yet.');
+        process.exit();
     }
 };
 module.exports = server;
