@@ -6,8 +6,8 @@
 module.exports = {
     allowedDomains: ['localhost','c9users.io','xentinel.io','desktop-ip4vcb7'],
     host: {
-        webserverRoute: 'app',
-        port: 8081,
+        webServerRoute: 'app',
+        port: 8080,
         crossOrigin: true
     },
     db: {
@@ -34,11 +34,13 @@ module.exports = {
         sessionExpiresMinutes: 30
     },
     directories:{
-        webApp: `${__dirname}/../../webapp`,
-        httpControllers: [`${__dirname}/../../api`],
+        webApp: `${__dirname}/../../hello-world`, //in case of web server
+        httpControllers: [`${__dirname}/../../api`], // in case of restapi
         models:{
             mongodb: [ `${__dirname}/../../models/private`, `${__dirname}/../../models/public` ]
         },
         controllers: [`${__dirname}/../../modules/users`,`${__dirname}/../../modules/history`]
-    }
+    },
+    usersEngine: true, // default true (it includes login) this uses mongodb as default database for now.
+    usersExtend: '' // file that contains the fields to extend users model
 };

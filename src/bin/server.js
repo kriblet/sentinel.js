@@ -2,65 +2,73 @@
  * Created by Ben on 08/06/2017.
  */
 
+'use strict';
 
-let options = {
-    debug: false,
-    config: null,
-    webServer: false,
-    restServer: false,
-    realTime: true
-};
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs-extra'));
+const pm2 = Promise.promisifyAll(require('pm2'));
+const ora = require('ora');
+const path = require('path');
 
-process.argv.forEach(function (val, index, array) {
-    if (val.indexOf('--debug') > -1){
-        options.debug = true;
-    }
-    if (val.indexOf('--config') > -1){
-        options.config = require(array[index+1]);
-    }
-    if (val.indexOf('--web') > -1){
-        options.webServer = true;
-    }
-    if (val.indexOf('--rest') > -1){
-        options.restServer = true;
-    }
-    if (val.indexOf('--realtime') > -1){
-        options.realtime = true;
-    }
-});
+const ROOTPATH = process.cwd();
 
-const ServiceApplication        = require(`${__dirname}/../service`);
-const conf                      = options.config || require(`${__dirname}/../../config`);
-
-let _conf = null;
-
-if (!options.debug) {
-    _conf = conf.production;
-}else{
-    _conf = conf.development;
-    _conf.debug = true;
-}
-
-options.config = _conf;
-
-module.exports = {
+let server = {
     start: function(){
-        let app = new ServiceApplication(options);
-        app.start()
-            .then(()=>{
-                process.on('SIGINT', function() {
-                    app.stop()
-                        .then(function () {
-                            process.exit(0);
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            process.exit(1);
-                        })
-                });
+        console.log("\n" +
+            "   _____            _   _            _       _  _____ \n" +
+            "  / ____|          | | (_)          | |     | |/ ____|\n" +
+            " | (___   ___ _ __ | |_ _ _ __   ___| |     | | (___  \n" +
+            "  \\___ \\ / _ \\ '_ \\| __| | '_ \\ / _ \\ | _   | |\\___ \\ \n" +
+            "  ____) |  __/ | | | |_| | | | |  __/ || |__| |____) |\n" +
+            " |_____/ \\___|_| |_|\\__|_|_| |_|\\___|_(_)____/|_____/ \n" +
+            "                                                      \n" +
+            "                                                      \n");
+        let spinner = ora('Initializing...').start();
+        return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
+            return pm2.connectAsync().then(() => {
+                return pm2.startAsync({
+                    name: 'sentinel',
+                    script: './src/bin/index.js',
+                    cwd: ROOTPATH,
+                    output: path.join(ROOTPATH, './logs/sentinel-output.log'),
+                    error: path.join(ROOTPATH, './logs/sentinel-error.log'),
+                    minUptime: 5000,
+                    maxRestarts: 5
+                }).then((res) => {
+                    spinner.succeed('Sentinel.js has started successfully.');
+                }).catch((err)=>{
+                    spinner.fail(err);
+                    process.exit(1);
+                }).finally(() => {
+                    pm2.disconnect();
+                })
+            }).catch((err)=>{
+                spinner.fail(err);
+                process.exit(1);
             })
-            .catch((err)=> {
-                console.error(err);
-            });
+        }).catch(err => {
+            spinner.fail(err);
+            process.exit(1);
+        });
+    },
+    stop: function(){
+        let spinner = ora('Shutting down Sentinel.js...').start()
+        return pm2.connectAsync().then(() => {
+            return pm2.stopAsync('sentinel').then(() => {
+                spinner.succeed('Sentinel.js has stopped successfully.');
+            }).finally(() => {
+                pm2.disconnect();
+            })
+        }).catch(err => {
+            spinner.fail(err);
+            process.exit(1);
+        })
+    },
+    restart: function(){
+        let self = this;
+        return self.stop().delay(1000).then(() => {
+            self.start();
+        })
     }
 };
+module.exports = server;

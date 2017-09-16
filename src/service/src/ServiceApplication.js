@@ -2,7 +2,7 @@
  * Created by Ben on 02/06/2017.
  */
 const express           = require("express"),
-    ioHandler           = require(`${__dirname}/modules/ioHandler`),
+    loader              = require(`${__dirname}/modules/loader`),
     Security            = require(`${__dirname}/modules/security`),
     app                 = express(),
     http                = require('http'),
@@ -43,7 +43,7 @@ class ServiceApplication {
         self.app.use( bodyParser.json() );
         self.app.use( bodyParser.urlencoded({"extended": false}) );
 
-        self.app.use(`/${self.config.host.webserverRoute}`, express.static(self.config.directories.webApp));
+        self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
 
         /* Set default headers for express api app */
         self.app.use(function (req, res, next) {
@@ -61,10 +61,17 @@ class ServiceApplication {
             /*Connects to mongodb database (name of db config)*/
             self.connectors =        new data.Connector(self.config.db /* db configuration for development */);
 
-            self.mongoConnector = self.connectors.connectors.mongodb;
-            self.mongoConnector.connect()
+            let promises = [];
+            Object.keys(self.connectors.connectors).forEach((conn)=>{
+                promises.push(conn.connect);
+            });
+
+            Promise.all(promises)
                 .then(() => {
                     if (self.config.usersEngine || true) {
+                        if (!self.config.directories.models.mongodb){
+                            throw new Error("No mongodb database available.");
+                        }
                         self.config.directories.models.mongodb.push(`${__dirname}/modules/users/models`);
                     }
                     /*Prepares all models existing in folder models... with extension of name sql / mongodb */
@@ -75,15 +82,21 @@ class ServiceApplication {
                              users = self.models.sql.users;
                              notifications = self.models.mongodb.notifications;
                              * */
+                            self.dataConnectors = {};
+                            Object.keys(self.connectors.connectors).forEach((connId)=> {
+                                self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
+                            });
+
                             self.models = models;
                             self.security = new Security(self);
                             self.security.use(self.models);
                             self.setHttpControllers();
                             self.setIo();
+                            self.setHandler();
                             /* Starts the app */
                             let port = process.env.PORT || self.config.port || 8081;
                             self.server.listen(port, () => {
-                                console.log(`Server ready at http://${self.hostname}:${port}/${self.config.host.webserverRoute}`);
+                                console.log(`Server listening at port ${port} \nWebServer listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
                                 self.status = "Running";
                                 resolve();
                             });
@@ -100,65 +113,21 @@ class ServiceApplication {
      *  set up all needed configuration for socket io.
      */
     setIo(){
-        ioHandler(this);
+        loader.ioLoader(this);
     }
 
+    /**
+     * Raise up all RestApi Services
+     */
     setHttpControllers(){
-        let self = this;
-        self.existingRoutes = {};
-
-        if (!self.config.directories.httpControllers){
-            return;
-        }
-        self._setHttpControllers(self.config.directories.httpControllers);
+        loader.restApiLoader(this);
     }
 
-    _setHttpControllers(directories){
-        let self = this;
-        directories.forEach((apiRoute)=>{
-            let apiFiles = fs.readdirSync(`${apiRoute}`);
-            apiFiles.forEach((apiFile)=>{
-                if (apiFile.indexOf('.js') === -1){
-                    return self._setHttpControllers([`${directories}/${apiFile}`]);
-                }
-                if (apiFile.indexOf('.controller') === -1){
-                    return;
-                }
-
-                /*requires each http api controller in directory*/
-                let endpointBase = '/' + apiFile.replace('.js','');
-                let httpControllersControllers = require(`${apiRoute}/${apiFile}`)(self);
-                Object.keys(httpControllersControllers).forEach((key)=>{
-                    let endpoints = [];
-                    let httpControllersController = httpControllersControllers[key],
-                        params = httpControllersController.params;
-                    if (params && params.constructor === Array && params.length > 0){
-                        params.forEach(function(param){
-                            if (param.constructor === Array){
-                                endpoints.push(endpointBase + '/' + key + '/:' + param.join('/:'));
-                            }else{
-                                endpoints.push(endpointBase + '/' + key + '/:' + param);
-                            }
-                        })
-                    }else if(params && params.constructor === Array && params.length === 0){
-                        endpoints.push(endpointBase + '/' + key);
-                    }else if(params){
-                        endpoints.push(endpointBase + '/' + key + '/:' + params);
-                    }
-
-                    if (!self.existingRoutes[httpControllersController.type || 'get']){
-                        self.existingRoutes[httpControllersController.type || 'get'] = [];
-                    }else{
-                        let found = _.intersection(self.existingRoutes[httpControllersController.type || 'get'], endpoints);
-                        if (found){
-                            throw new Error(`Routes already defined ${found.join(" | ")}` );
-                        }
-                    }
-                    self.existingRoutes[httpControllersController.type || 'get'] = self.existingRoutes[httpControllersController.type || 'get'].concat(endpoints);
-                    self.app[httpControllersController.type || 'get'](endpoints, httpControllersController.middleware || null, httpControllersController.worker);
-                });
-            });
-        });
+    /**
+     * Request hack for proxies
+     */
+    setHandler(){
+        loader.requestLoader(this);
     }
 
     broadcast(_event, _data){
@@ -172,54 +141,19 @@ class ServiceApplication {
     stop(){
         let self = this;
         return new Promise((resolve, reject)=>{
-            self.sqlConnector.getConnection().close();
-            self.mongoConnector.getConnection().close();
-            self.connections.forEach(function(client) {
-                client.disconnect();
+            Object.keys(self.connections).forEach(function(clientId) {
+                self.connections[clientId].forEach((client)=>{
+                    client.disconnect();
+                });
+            });
+            Object.keys(self.dataConnectors).forEach((connId)=> {
+                self.dataConnectors[connId].close();
             });
             self.status = "Stopped";
+            console.log("Service Stopped Successfully");
             resolve();
         });
-
     }
-
-    setHandler(){
-        let self = this;
-        let srv = self.server;
-        let listeners = srv.listeners('request').slice(0);
-        srv.removeAllListeners('request');
-        srv.on('request', function(req, res) {
-            if(req.method === 'OPTIONS' && req.url.indexOf('/socket.io') === 0) {
-                let headers = {};
-
-                if (req.headers.origin === undefined){
-                    req.headers.origin = 'chrome-extension://';
-                }
-
-                if (req.headers.origin) {
-                    self.config.allowedDomains.forEach(function (domain) {
-                        if (req.headers.origin.indexOf(domain) > -1) {
-                            headers['Access-Control-Allow-Origin'] = req.headers.origin;
-                            headers['Access-Control-Allow-Credentials'] = 'true';
-                        }
-                    });
-                }
-
-                headers['Content-Type'] = "application/json; charset=utf-8";
-                headers['X-Powered-By'] = "Kriblet";
-
-                headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS";
-                headers['Access-Control-Allow-Headers'] = 'origin, X-Requested-With, Content-Type, Accept, Content-Length, x-app-id, x-session-id';
-                res.writeHead(200, headers);
-                res.end();
-            } else {
-                listeners.forEach(function(fn) {
-                    fn.call(srv, req, res);
-                });
-            }
-        });
-    }
-
 }
 
 
