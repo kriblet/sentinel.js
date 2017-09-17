@@ -16,7 +16,7 @@ require('yargs') // eslint-disable-line no-unused-expressions
         alias: ['boot', 'init'],
         desc: 'Start Sentinel.js process',
         handler: argv => {
-            init.start()
+            init.start(argv.debug, argv.config, argv.clusters)
         }
     })
     .command({
@@ -36,12 +36,33 @@ require('yargs') // eslint-disable-line no-unused-expressions
         }
     })
     .command({
+        command: 'remove',
+        alias: ['delete','remove'],
+        desc: 'Stops the app and deletes it from pm2 list',
+        handler: argv => {
+            init.delete()
+        }
+    })
+    .command({
         command: 'hello-world',
         alias: ['hello-world'],
         desc: 'Download and Runs Sentinel.js Hello-World project',
         handler: argv => {
             init.helloWorld()
         }
+    })
+    .option('debug', {
+        type: Boolean,
+        desc: 'Execute in debug mode (takes development config)'
+    })
+    .option('config', {
+        type: String,
+        desc: 'Path to the config file'
+    })
+    .option('clusters', {
+        type: Number,
+        desc: 'Number of instances to execute',
+        default: 1
     })
     .recommendCommands()
     .demandCommand(1, 'You must provide one of the accepted commands above.')

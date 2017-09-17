@@ -25,15 +25,28 @@ let printSentinel = function(){
 };
 
 let server = {
-    start: function(){
+    start: function(debug, config, clusters){
         let spinner = ora('Initializing...').start();
         printSentinel();
+        let args = [];
+        if (debug){
+            args.push("--debug");
+        }
+        if (config){
+            args.push("--config");
+            args.push(config);
+        }
+        let execMode = clusters && clusters > 1 ? 'cluster' : null;
+        console.log("CLUSTERS",clusters, execMode);
         return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
             return pm2.connectAsync().then(() => {
                 return pm2.startAsync({
                     name: 'sentinel',
                     script: './src/bin/index.js',
                     cwd: ROOTPATH,
+                    interpreterArgs: args,
+                    execMode: execMode,
+                    instances: clusters || 1,
                     output: path.join(ROOTPATH, './logs/sentinel-output.log'),
                     error: path.join(ROOTPATH, './logs/sentinel-error.log'),
                     minUptime: 5000,
@@ -69,9 +82,35 @@ let server = {
         })
     },
     restart: function(){
-        let self = this;
-        return self.stop().delay(1000).then(() => {
-            self.start();
+        let spinner = ora('Restarting Sentinel.js...').start();
+        return pm2.connectAsync().then(() => {
+            pm2.gracefulReloadAsync("sentinel").then(()=>{
+                spinner.succeed('Sentinel.js has resatrted successfully.');
+            }).catch((err)=>{
+                spinner.fail(err);
+                process.exit(1);
+            }).finally(() => {
+                pm2.disconnect();
+            });
+        }).catch((err)=>{
+            spinner.fail(err);
+            process.exit(1);
+        })
+    },
+    delete: function() {
+        let spinner = ora('Removing Sentinel.js...').start();
+        return pm2.connectAsync().then(() => {
+            pm2.deleteAsync("sentinel").then(() => {
+                spinner.succeed('Sentinel.js has been removed successfully.');
+            }).catch((err) => {
+                spinner.fail(err);
+                process.exit(1);
+            }).finally(() => {
+                pm2.disconnect();
+            });
+        }).catch((err) => {
+            spinner.fail(err);
+            process.exit(1);
         })
     },
     helloWorld: function(){
