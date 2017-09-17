@@ -37,7 +37,6 @@ let server = {
             args.push(config);
         }
         let execMode = clusters && clusters > 1 ? 'cluster' : null;
-        console.log("CLUSTERS",clusters, execMode);
         return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
             return pm2.connectAsync().then(() => {
                 return pm2.startAsync({
