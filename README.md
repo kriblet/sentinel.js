@@ -98,5 +98,10 @@ you can copy hello-world project to run it and test it.
 
 #### How to run
 ```bash
-node sentinel start
+sentinel start
+```
+
+#### Help
+```bash
+sentinel help
 ```
