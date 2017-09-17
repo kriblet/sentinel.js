@@ -95,6 +95,7 @@ module.exports = {
 
 #### note:
 you can copy hello-world project to run it and test it.
+https://github.com/kriblet/sentineljs-skeleton
 
 ### How to run my app
 ```bash
