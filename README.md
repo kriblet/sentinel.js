@@ -96,9 +96,19 @@ module.exports = {
 #### note:
 you can copy hello-world project to run it and test it.
 
-#### How to run
+### How to run my app
 ```bash
 sentinel start
+```
+
+#### Restarting my app
+```bash
+sentinel restart
+```
+
+#### Removing my app
+```bash
+sentinel remove
 ```
 
 #### Help

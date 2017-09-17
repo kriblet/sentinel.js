@@ -44,6 +44,14 @@ require('yargs') // eslint-disable-line no-unused-expressions
         }
     })
     .command({
+        command: 'status',
+        alias: ['status'],
+        desc: 'Check the app current status',
+        handler: argv => {
+            init.status()
+        }
+    })
+    .command({
         command: 'hello-world',
         alias: ['hello-world'],
         desc: 'Download and Runs Sentinel.js Hello-World project',

@@ -112,6 +112,26 @@ let server = {
             process.exit(1);
         })
     },
+    status: function() {
+        let spinner = ora('Verifying Sentinel.js...').start();
+        return pm2.connectAsync().then(() => {
+            pm2.describeAsync("sentinel").then((result) => {
+                if (result.length > 0){
+                    spinner.succeed(`${result[0].name} => CPU ${result[0].monit.cpu}% | ${(result[0].monit.memory / 1048576).toFixed(2)}MB used`);
+                }else{
+                    spinner.succeed("Nothing to show yet");
+                }
+            }).catch((err) => {
+                spinner.fail(err);
+                process.exit(1);
+            }).finally(() => {
+                pm2.disconnect();
+            });
+        }).catch((err) => {
+            spinner.fail(err);
+            process.exit(1);
+        })
+    },
     helloWorld: function(){
         printSentinel();
         let spinner = ora('Working on it yet.').start();
