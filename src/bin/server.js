@@ -41,11 +41,11 @@ let server = {
             return pm2.connectAsync().then(() => {
                 return pm2.startAsync({
                     name: 'sentinel',
-                    script: './src/bin/index.js',
+                    script: `${__dirname}/index.js`,
                     cwd: ROOTPATH,
                     interpreterArgs: args,
                     execMode: execMode,
-                    instances: clusters || 1,
+                    instances: clusters,
                     output: path.join(ROOTPATH, './logs/sentinel-output.log'),
                     error: path.join(ROOTPATH, './logs/sentinel-error.log'),
                     minUptime: 5000,
