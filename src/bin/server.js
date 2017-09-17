@@ -12,24 +12,41 @@ const path = require('path');
 
 const ROOTPATH = process.cwd();
 
+let printSentinel = function(){
+    console.log("\n" +
+        "   _____            _   _            _       _  _____ \n" +
+        "  / ____|          | | (_)          | |     | |/ ____|\n" +
+        " | (___   ___ _ __ | |_ _ _ __   ___| |     | | (___  \n" +
+        "  \\___ \\ / _ \\ '_ \\| __| | '_ \\ / _ \\ | _   | |\\___ \\ \n" +
+        "  ____) |  __/ | | | |_| | | | |  __/ || |__| |____) |\n" +
+        " |_____/ \\___|_| |_|\\__|_|_| |_|\\___|_(_)____/|_____/ \n" +
+        "                                                      \n" +
+        "                                                      \n");
+};
+
 let server = {
-    start: function(){
-        console.log("\n" +
-            "   _____            _   _            _       _  _____ \n" +
-            "  / ____|          | | (_)          | |     | |/ ____|\n" +
-            " | (___   ___ _ __ | |_ _ _ __   ___| |     | | (___  \n" +
-            "  \\___ \\ / _ \\ '_ \\| __| | '_ \\ / _ \\ | _   | |\\___ \\ \n" +
-            "  ____) |  __/ | | | |_| | | | |  __/ || |__| |____) |\n" +
-            " |_____/ \\___|_| |_|\\__|_|_| |_|\\___|_(_)____/|_____/ \n" +
-            "                                                      \n" +
-            "                                                      \n");
+    start: function(debug, config, clusters){
         let spinner = ora('Initializing...').start();
+        printSentinel();
+        let args = [];
+        if (debug){
+            args.push("--debug");
+        }
+        if (config){
+            args.push("--config");
+            args.push(config);
+        }
+        let execMode = clusters && clusters > 1 ? 'cluster' : null;
+        console.log("CLUSTERS",clusters, execMode);
         return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
             return pm2.connectAsync().then(() => {
                 return pm2.startAsync({
                     name: 'sentinel',
                     script: './src/bin/index.js',
                     cwd: ROOTPATH,
+                    interpreterArgs: args,
+                    execMode: execMode,
+                    instances: clusters || 1,
                     output: path.join(ROOTPATH, './logs/sentinel-output.log'),
                     error: path.join(ROOTPATH, './logs/sentinel-error.log'),
                     minUptime: 5000,
@@ -52,7 +69,7 @@ let server = {
         });
     },
     stop: function(){
-        let spinner = ora('Shutting down Sentinel.js...').start()
+        let spinner = ora('Shutting down Sentinel.js...').start();
         return pm2.connectAsync().then(() => {
             return pm2.stopAsync('sentinel').then(() => {
                 spinner.succeed('Sentinel.js has stopped successfully.');
@@ -65,10 +82,43 @@ let server = {
         })
     },
     restart: function(){
-        let self = this;
-        return self.stop().delay(1000).then(() => {
-            self.start();
+        let spinner = ora('Restarting Sentinel.js...').start();
+        return pm2.connectAsync().then(() => {
+            pm2.gracefulReloadAsync("sentinel").then(()=>{
+                spinner.succeed('Sentinel.js has resatrted successfully.');
+            }).catch((err)=>{
+                spinner.fail(err);
+                process.exit(1);
+            }).finally(() => {
+                pm2.disconnect();
+            });
+        }).catch((err)=>{
+            spinner.fail(err);
+            process.exit(1);
         })
+    },
+    delete: function() {
+        let spinner = ora('Removing Sentinel.js...').start();
+        return pm2.connectAsync().then(() => {
+            pm2.deleteAsync("sentinel").then(() => {
+                spinner.succeed('Sentinel.js has been removed successfully.');
+            }).catch((err) => {
+                spinner.fail(err);
+                process.exit(1);
+            }).finally(() => {
+                pm2.disconnect();
+            });
+        }).catch((err) => {
+            spinner.fail(err);
+            process.exit(1);
+        })
+    },
+    helloWorld: function(){
+        printSentinel();
+        let spinner = ora('Working on it yet.').start();
+        console.log("\n¯\\_(ツ)_/¯");
+        spinner.fail('Sentinel.js not ready for hello-world yet.');
+        process.exit();
     }
 };
 module.exports = server;
