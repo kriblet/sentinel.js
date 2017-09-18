@@ -3,7 +3,7 @@
 
 // ===========================================
 // Sentinel.js
-// 1.0.2
+// 1.0.3
 // Licensed under AGPLv3
 // ===========================================
 
@@ -16,7 +16,7 @@ require('yargs') // eslint-disable-line no-unused-expressions
         alias: ['boot', 'init'],
         desc: 'Start Sentinel.js process',
         handler: argv => {
-            init.start(argv.debug, argv.config, argv.clusters)
+            init.start(argv.debug, argv.config, argv.clusters);
         }
     })
     .command({
@@ -24,7 +24,7 @@ require('yargs') // eslint-disable-line no-unused-expressions
         alias: ['quit', 'exit'],
         desc: 'Stop Sentinel.js process',
         handler: argv => {
-            init.stop()
+            init.stop();
         }
     })
     .command({
@@ -40,7 +40,7 @@ require('yargs') // eslint-disable-line no-unused-expressions
         alias: ['delete','remove'],
         desc: 'Stops the app and deletes it from pm2 list',
         handler: argv => {
-            init.delete()
+            init.delete();
         }
     })
     .command({
@@ -48,7 +48,15 @@ require('yargs') // eslint-disable-line no-unused-expressions
         alias: ['status'],
         desc: 'Check the app current status',
         handler: argv => {
-            init.status()
+            init.status();
+        }
+    })
+    .command({
+        command: 'logs',
+        alias: ['logs'],
+        desc: 'Watch pm2 app current logs',
+        handler: argv => {
+            init.log();
         }
     })
     .command({

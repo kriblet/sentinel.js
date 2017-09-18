@@ -12,7 +12,32 @@ const express           = require("express"),
     os                  = require('os'),
     fs                  = require('fs'),
     data                = require(`${__dirname}/../../data`),
+    winston             = require('winston'),
     _                   = require('lodash');
+
+const logger = new (winston.Logger)({
+    levels: {
+        'info': 1,
+        'debug': 0,
+        'warn': 2,
+        'error': 3
+    },
+    colors: {
+        'info': 'cyan',
+        'debug': 'gray',
+        'warn': 'yellow',
+        'error': 'red'
+    },
+    transports: [
+        new (winston.transports.Console)({
+            colorized: true,
+            timestamp: true
+        }),
+        new (winston.transports.File)({
+            filename: 'sentinel.log'
+        })
+    ]
+});
 
 
 
@@ -21,6 +46,7 @@ const express           = require("express"),
  */
 class ServiceApplication {
     constructor(options = null){
+        this.logger = logger;
         this.app = app;
         this.config(options.config);
         this.server = server;
@@ -38,16 +64,24 @@ class ServiceApplication {
             throw new Error("Configuration is not set for Service Application");
         }
         self.config = config;
+
+        self.logger.level = self.config.logLevel;
+
+        self.logger.info('Adding configuration');
+
         /* Express api app configuration*/
         self.app.use( compression()) ;
         self.app.use( bodyParser.json() );
         self.app.use( bodyParser.urlencoded({"extended": false}) );
 
-        self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
+        if (self.config.directories.webApp) {
+            self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
+            self.logger.info(`Adding static routes for ${self.config.directories.webApp}`);
+        }
 
         /* Set default headers for express api app */
         self.app.use(function (req, res, next) {
-            res.header('X-Powered-By', "Xentinel");
+            res.header('X-Powered-By', "SentinelJS");
            next();
         });
     }

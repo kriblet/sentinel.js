@@ -4,6 +4,7 @@
 
 
 module.exports = {
+    logLevel: 'error' || 'debug' || 'info' || 'warn' || 'error',
     allowedDomains: ['localhost','c9users.io','xentinel.io','desktop-ip4vcb7'],
     host: {
         webServerRoute: 'app',

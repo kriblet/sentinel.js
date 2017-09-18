@@ -132,6 +132,16 @@ let server = {
             process.exit(1);
         })
     },
+    log: function() {
+        let spinner = ora('Watching Sentinel, CTRL+C to exit').start();
+        return pm2.connectAsync().then(() => {
+            pm2.streamLogs("sentinel");
+
+        }).catch((err) => {
+            spinner.fail(err);
+            process.exit(1);
+        })
+    },
     helloWorld: function(){
         printSentinel();
         let spinner = ora('Working on it yet.').start();
