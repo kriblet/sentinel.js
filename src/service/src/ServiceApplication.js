@@ -17,8 +17,8 @@ const express           = require("express"),
 
 const logger = new (winston.Logger)({
     levels: {
-        'info': 1,
-        'debug': 0,
+        'info': 0,
+        'debug': 1,
         'warn': 2,
         'error': 3
     },
