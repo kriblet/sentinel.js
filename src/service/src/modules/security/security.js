@@ -4,30 +4,34 @@
 
 const bcrypt = require("bcrypt");
 
-class Security{
-    constructor(service){
+class Security {
+    constructor(service) {
         this.service = service;
     }
-    get middleware(){
+
+    get middleware() {
         let self = this;
         return (socket, next) => {
             if (!socket.user) {
                 socket.user = {
                     token: socket.handshake.headers['x-session-id'] || null,
-                    app: socket.handshake.headers['x-app-id']|| null,
-                    username: socket.handshake.headers['x-username']|| null,
-                    password: socket.handshake.headers['x-password']|| null
+                    app: socket.handshake.headers['x-app-id'] || null,
+                    username: socket.handshake.headers['x-username'] || null,
+                    password: socket.handshake.headers['x-password'] || null
                 };
                 if (socket.user.app) {
-                    self.models.mongodb.apps.findById(socket.user.app, (err, app)=>{
-                        if (app){
+                    self.models.mongodb.apps.findById(socket.user.app, (err, app) => {
+                        if (app) {
                             socket.user.app = app;
                             if (socket.user.token) /* user already has a session token */ {
                                 /**
                                  * Session section
                                  * find latest session to connect.
                                  */
-                                self.models.mongodb.sessions.findOne({ token:socket.user.token, validAt: { $gte: new Date() }})
+                                self.models.mongodb.sessions.findOne({
+                                    token: socket.user.token,
+                                    validAt: {$gte: new Date()}
+                                })
                                     .populate('user').then((session) => {
                                     if (!session) {
                                         return next({
@@ -41,18 +45,18 @@ class Security{
                                             path: 'user.information.country',
                                             select: 'name',
                                             model: self.models.mongodb.countries
-                                        },{
+                                        }, {
                                             path: 'user.information.state',
                                             select: 'name',
                                             model: self.models.mongodb.states
-                                        },{
+                                        }, {
                                             path: 'user.information.city',
                                             select: 'name',
                                             model: self.models.mongodb.cities
-                                        }], (err)=>{
-                                            if (err){
+                                        }], (err) => {
+                                            if (err) {
                                                 return next(err);
-                                            }else{
+                                            } else {
                                                 socket.user.me = session.user;
                                                 console.log(`${socket.user.me.email} connected from ${socket.user.app.name} with existent session`);
                                                 return next();
@@ -63,16 +67,16 @@ class Security{
 
                                     }
                                 }).catch((err) => {
-                                   return next({
-                                       message: {isValid: false, error: err.message}
+                                    return next({
+                                        message: {isValid: false, error: err.message}
                                     });
                                 });
-                            }else if(socket.user.username)/* login */ {
+                            } else if (socket.user.username)/* login */ {
                                 /**
                                  * Login section
                                  * find the user with email, then verify the password
                                  */
-                                self.models.mongodb.users.findOne({$or:[{email:socket.user.username},{username: socket.user.username}]}).then((user) => {
+                                self.models.mongodb.users.findOne({$or: [{email: socket.user.username}, {username: socket.user.username}]}).then((user) => {
                                     if (!user) {
                                         return next({
                                             message: {isValid: false, error: 'Usuario no encontrado'}
@@ -84,29 +88,29 @@ class Security{
                                                 path: 'information.country',
                                                 select: 'name',
                                                 model: self.models.mongodb.countries
-                                            },{
+                                            }, {
                                                 path: 'information.state',
                                                 select: 'name',
                                                 model: self.models.mongodb.states
-                                            },{
+                                            }, {
                                                 path: 'information.city',
                                                 select: 'name',
                                                 model: self.models.mongodb.cities
-                                            }], (err)=>{
-                                                if (err){
+                                            }], (err) => {
+                                                if (err) {
                                                     return next(err);
-                                                }else{
+                                                } else {
                                                     socket.user.me = user;
                                                     let newSession = new self.models.mongodb.sessions({
                                                         user: user._id,
                                                         validAt: new Date()
                                                     });
-                                                    newSession.save((err)=>{
-                                                        if (err){
+                                                    newSession.save((err) => {
+                                                        if (err) {
                                                             return next({
                                                                 message: {isValid: false, error: err.message}
                                                             });
-                                                        }else {
+                                                        } else {
                                                             socket.user.session = newSession;
                                                             console.log(`${socket.user.me.email} connected from ${socket.user.app.name} with login`);
                                                             return next();
@@ -117,7 +121,7 @@ class Security{
                                             });
 
 
-                                        }else{
+                                        } else {
                                             return next({
                                                 message: {isValid: false, error: 'La contraseña no es correcta'}
                                             });
@@ -129,9 +133,9 @@ class Security{
                                     });
                                 });
 
-                            }else{
+                            } else {
                                 let action = socket.handshake.headers['x-action'].toLowerCase();
-                                if (this.service.config.actions.indexOf(action) > -1){
+                                if (this.service.config.actions.indexOf(action) > -1) {
                                     socket.user = null;
                                     socket.action = action;
                                     return next();
@@ -140,19 +144,19 @@ class Security{
                                     message: {isValid: false, error: 'Acción no valida'}
                                 });
                             }
-                        }else{
+                        } else {
                             return next({
                                 message: {isValid: false, error: 'Id de aplicación no valido'}
                             });
                         }
 
                     });
-                }else {
+                } else {
                     return next({
                         message: {isValid: false, error: 'Missing header [x-app-id]'}
                     });
                 }
-            }else{
+            } else {
                 console.log("User authenticated");
                 socket.user.session.validAt = new Date();
                 socket.user.session.save();
@@ -162,34 +166,56 @@ class Security{
 
         };
     }
-    get httpMiddleware(){
+
+    get httpMiddleware() {
         let self = this;
-        return (req,res,next)=>{
+        return (req, res, next) => {
             let appId = req.headers['x-app-id'];
             console.log(appId);
-            if (appId){
-                self.models.mongodb.apps.findById(appId, (err, app)=>{
-                    if (app){
+            if (appId) {
+                self.models.mongodb.apps.findById(appId, (err, app) => {
+                    if (app) {
                         req.app = app;
                         next();
-                    }else{
+                    } else {
                         res.json({
-                            isValid:false,
+                            isValid: false,
                             error: 'appId invalid'
                         })
                     }
                 });
-            }else{
+            } else {
                 res.json({
-                    isValid:false,
+                    isValid: false,
                     error: 'appId invalid'
                 })
             }
 
         }
     }
-    use(models){
+
+    use(models) {
         this.models = models;
+    }
+
+    static disableFrameEmbedding(res) {
+        // -> Disable Frame Embedding
+        res.set('X-Frame-Options', 'deny');
+    }
+
+    static enableXssFilter(res){
+        // -> Re-enable XSS Fitler if disabled
+        res.set('X-XSS-Protection', '1; mode=block');
+    }
+
+    static disableMimeSniffing(res){
+        // -> Disable MIME-sniffing
+        res.set('X-Content-Type-Options', 'nosniff');
+    }
+
+    static disableIeCompatibility(res){
+        // -> Disable IE Compatibility Mode
+        res.set('X-UA-Compatible', 'IE=edge');
     }
 }
 

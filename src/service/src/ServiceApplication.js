@@ -82,7 +82,19 @@ class ServiceApplication {
         /* Set default headers for express api app */
         self.app.use(function (req, res, next) {
             res.header('X-Powered-By', "SentinelJS");
-           next();
+            if (self.config.security.disableFrameEmbedding){
+                Security.disableFrameEmbedding(res);
+            }
+            if (self.config.security.disableMimeSniffing){
+                Security.disableMimeSniffing(res);
+            }
+            if (self.config.security.enableXssFilter){
+                Security.enableXssFilter(res);
+            }
+            if (self.config.security.disableIeCompatibility){
+                Security.disableIeCompatibility(res);
+            }
+            next();
         });
     }
 

@@ -43,7 +43,7 @@ let server = {
                     name: 'sentinel',
                     script: `${__dirname}/index.js`,
                     cwd: ROOTPATH,
-                    interpreterArgs: args,
+                    args: args,
                     execMode: execMode,
                     instances: clusters,
                     output: path.join(ROOTPATH, './logs/sentinel-output.log'),

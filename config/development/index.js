@@ -32,7 +32,15 @@ module.exports = {
         }
     ],
     security:{
-        sessionExpiresMinutes: 30
+        sessionExpiresMinutes: 30,
+        /*Disable frame embedding (recommended)*/
+        disableFrameEmbedding: true,
+        /*Enable XSS filter (recommended)*/
+        enableXssFilter: true,
+        /*Disables MIME sniffer (recommended)*/
+        disableMimeSniffing: true,
+        /*Disables Internet Explorer compatibility (up to you)*/
+        disableIeCompatibility: false
     },
     directories:{
         webApp: `${__dirname}/../../hello-world`, //in case of web server
