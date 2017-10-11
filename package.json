@@ -1,6 +1,6 @@
 {
   "name": "sentineljs",
-  "version": "1.0.2-6",
+  "version": "1.0.2-8",
   "license": "GPL-3.0",
   "engines": {
     "node": "~6.10.3"
@@ -27,14 +27,17 @@
     "body-parser": "^1.17.2",
     "compression": "^1.6.2",
     "dynamoose": "^0.7.0",
+    "ejs": "^2.5.7",
     "express": "^4.15.3",
     "fs-extra": "^4.0.2",
+    "jade": "^1.11.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.10.2",
     "mssql": "^4.0.4",
     "mysql": "^2.13.0",
     "ora": "^1.3.0",
     "pm2": "^2.7.0",
+    "pug": "^2.0.0-rc.4",
     "sequelize": "^3.30.4",
     "sequelize-auto": "^0.4.28",
     "socket.io": "^2.0.2",

@@ -87,7 +87,7 @@ class ServiceApplication {
                     }
                     self.logger.info(`Web application with external express @ ${self.config.directories.webApp}`);
                 }catch(err){
-                    self.logger.error(err);
+                    console.error(err);
                     self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
                     self.logger.info(`Adding static routes for ${self.config.directories.webApp}`);
                 }
