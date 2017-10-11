@@ -111,6 +111,47 @@ class ServiceApplication {
             }
             next();
         });
+
+        /*Connects to mongodb database (name of db config)*/
+        self.connectors =        new data.Connector(self.config.db /* db configuration for development */);
+
+        let promises = [];
+        Object.keys(self.connectors.connectors).forEach((conn)=>{
+            promises.push(conn.connect);
+        });
+
+        Promise.all(promises)
+            .then(() => {
+                if (self.config.usersEngine) {
+                    if (!self.config.directories.models.mongodb){
+                        throw new Error("No mongodb database available.");
+                    }
+                    self.config.directories.models.mongodb.push(`${__dirname}/modules/users/models`);
+                }
+                /*Prepares all models existing in folder models... with extension of name sql / mongodb */
+                data.Models.prepare(self.connectors.connectors, self)
+                    .then((models) => {
+                        self.dataConnectors = {};
+                        Object.keys(self.connectors.connectors).forEach((connId)=> {
+                            self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
+                        });
+
+                        self.models = models;
+                        self.security = new Security(self);
+                        self.security.use(self.models);
+                        self.setHttpControllers();
+                        self.setIo();
+                        self.setHandler();
+
+                    })
+                    .catch((err)=>{
+                        self.logger.error(err);
+                    });
+            })
+            .catch((err)=>{
+                self.logger.error(err);
+            });
+
     }
 
     /**
@@ -119,48 +160,13 @@ class ServiceApplication {
     start(){
         let self = this;
         return new Promise((resolve,reject)=> {
-            /*Connects to mongodb database (name of db config)*/
-            self.connectors =        new data.Connector(self.config.db /* db configuration for development */);
-
-            let promises = [];
-            Object.keys(self.connectors.connectors).forEach((conn)=>{
-                promises.push(conn.connect);
+            /* Starts the app */
+            let port = process.env.PORT || self.config.host.port || 8081;
+            self.server.listen(port, () => {
+                console.log(`Server listening at port ${port} \nWebServer listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
+                self.status = "Running";
+                resolve();
             });
-
-            Promise.all(promises)
-                .then(() => {
-                    if (self.config.usersEngine || true) {
-                        if (!self.config.directories.models.mongodb){
-                            throw new Error("No mongodb database available.");
-                        }
-                        self.config.directories.models.mongodb.push(`${__dirname}/modules/users/models`);
-                    }
-                    /*Prepares all models existing in folder models... with extension of name sql / mongodb */
-                    data.Models.prepare(self.connectors.connectors, self)
-                        .then((models) => {
-                            self.dataConnectors = {};
-                            Object.keys(self.connectors.connectors).forEach((connId)=> {
-                                self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
-                            });
-
-                            self.models = models;
-                            self.security = new Security(self);
-                            self.security.use(self.models);
-                            self.setHttpControllers();
-                            self.setIo();
-                            self.setHandler();
-                            /* Starts the app */
-                            let port = process.env.PORT || self.config.host.port || 8081;
-                            self.server.listen(port, () => {
-                                console.log(`Server listening at port ${port} \nWebServer listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
-                                self.status = "Running";
-                                resolve();
-                            });
-
-                        })
-                        .catch(reject);
-                })
-                .catch(reject);
         });
     }
 
