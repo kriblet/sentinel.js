@@ -101,7 +101,8 @@ class ServiceApplication {
 
         let promises = [];
         Object.keys(self.connectors.connectors).forEach((conn)=>{
-            promises.push(conn.connect);
+            console.log(self.connectors.connectors[conn].connect());
+            promises.push(self.connectors.connectors[conn].connect);
         });
 
         Promise.all(promises)
@@ -117,6 +118,7 @@ class ServiceApplication {
                     .then((models) => {
                         self.dataConnectors = {};
                         Object.keys(self.connectors.connectors).forEach((connId)=> {
+
                             self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
                         });
 
