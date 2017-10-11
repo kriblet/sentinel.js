@@ -48,9 +48,11 @@ class ServiceApplication {
     constructor(options = null){
         this.logger = logger;
         this.app = app;
-        this.config(options.config);
         this.server = server;
         this.hostname = os.hostname();
+        this.express = express;
+        this.config(options.config);
+
     }
 
     /**
