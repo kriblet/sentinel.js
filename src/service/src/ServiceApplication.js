@@ -154,7 +154,7 @@ class ServiceApplication {
                             self.setIo();
                             self.setHandler();
                             /* Starts the app */
-                            let port = process.env.PORT || self.config.port || 8081;
+                            let port = process.env.PORT || self.config.host.port || 8081;
                             self.server.listen(port, () => {
                                 console.log(`Server listening at port ${port} \nWebServer listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
                                 self.status = "Running";
