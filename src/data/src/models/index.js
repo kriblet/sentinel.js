@@ -48,6 +48,7 @@ module.exports.prepare = (connectors, service)=>{
             if(err){
                 reject(err);
             }else{
+                service.models = models;
                 resolve(models);
             }
         });

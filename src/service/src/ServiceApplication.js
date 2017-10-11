@@ -138,11 +138,6 @@ class ServiceApplication {
                     /*Prepares all models existing in folder models... with extension of name sql / mongodb */
                     data.Models.prepare(self.connectors.connectors, self)
                         .then((models) => {
-                            /* This models are available as the example in tests
-                             *
-                             users = self.models.sql.users;
-                             notifications = self.models.mongodb.notifications;
-                             * */
                             self.dataConnectors = {};
                             Object.keys(self.connectors.connectors).forEach((connId)=> {
                                 self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
