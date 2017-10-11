@@ -75,24 +75,6 @@ class ServiceApplication {
         self.app.use( bodyParser.urlencoded({"extended": false}) );
 
 
-        if (self.config.directories.webApp) {
-            let stat = fs.lstatSync(self.config.directories.webApp);
-            if (stat.isDirectory()){
-                try{
-                    let webApp = require(self.config.directories.webApp);
-                    if (webApp.use){
-                        webApp.use(self);
-                    }else{
-                        webApp(self);
-                    }
-                    self.logger.info(`Web application with external express @ ${self.config.directories.webApp}`);
-                }catch(err){
-                    console.error(err);
-                    self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
-                    self.logger.info(`Adding static routes for ${self.config.directories.webApp}`);
-                }
-            }
-        }
 
         /* Set default headers for express api app */
         self.app.use(function (req, res, next) {
@@ -142,6 +124,25 @@ class ServiceApplication {
                         self.setHttpControllers();
                         self.setIo();
                         self.setHandler();
+
+                        if (self.config.directories.webApp) {
+                            let stat = fs.lstatSync(self.config.directories.webApp);
+                            if (stat.isDirectory()){
+                                try{
+                                    let webApp = require(self.config.directories.webApp);
+                                    if (webApp.use){
+                                        webApp.use(self);
+                                    }else{
+                                        webApp(self);
+                                    }
+                                    self.logger.info(`Web application with external express @ ${self.config.directories.webApp}`);
+                                }catch(err){
+                                    console.error(err);
+                                    self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
+                                    self.logger.info(`Adding static routes for ${self.config.directories.webApp}`);
+                                }
+                            }
+                        }
 
                     })
                     .catch((err)=>{
