@@ -101,8 +101,7 @@ class ServiceApplication {
 
         let promises = [];
         Object.keys(self.connectors.connectors).forEach((conn)=>{
-            console.log(self.connectors.connectors[conn].connect());
-            promises.push(self.connectors.connectors[conn].connect);
+            promises.push(self.connectors.connectors[conn].connect());
         });
 
         Promise.all(promises)
@@ -128,7 +127,6 @@ class ServiceApplication {
                         self.setHttpControllers();
                         self.setIo();
                         self.setHandler();
-
                         if (self.config.directories.webApp) {
                             let stat = fs.lstatSync(self.config.directories.webApp);
                             if (stat.isDirectory()){
