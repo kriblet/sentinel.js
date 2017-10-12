@@ -10,7 +10,7 @@ let listControllers = (service)=>{
          * send an sendResponsenowledge response to client with the list of items.
          */
         event: 'find',
-        worker: (args, sendResponse)=> {
+        worker: (socket, args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -65,7 +65,7 @@ let listControllers = (service)=>{
          * send an sendResponsenowledge response to client with the list of items.
          */
         event: 'findOne',
-        worker: (args, sendResponse)=> {
+        worker: (socket, args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -111,7 +111,7 @@ let listControllers = (service)=>{
          * send an sendResponsenowledge response to client with the list of items.
          */
         event: 'findById',
-        worker: (args, sendResponse)=> {
+        worker: (socket, args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -157,7 +157,7 @@ let listControllers = (service)=>{
          * send an sendResponsenowledge response to client with isValid true or false with error.
          */
         event: 'save',
-        worker: (args, sendResponse)=>{
+        worker: (socket, args, sendResponse)=>{
             if (!args.model ){
                 return sendResponse({
                     isValid: false,
@@ -198,7 +198,7 @@ let listControllers = (service)=>{
         }
     },{
         event: 'findByIdAndUpdate',
-        worker: (args, sendResponse)=> {
+        worker: (socket, args, sendResponse)=> {
             /*
              * default result will return latest 10 items
              * available args are.
@@ -273,7 +273,7 @@ let listControllers = (service)=>{
         }
     },{
         event: 'findByIdAndDelete',
-        worker: (args, sendResponse)=> {
+        worker: (socket, args, sendResponse)=> {
             let self = this;
             /*
              * available args are.
@@ -343,7 +343,7 @@ let listControllers = (service)=>{
         }
     },{
         event: 'autocomplete',
-        worker: (args, sendResponse)=> {
+        worker: (socket, args, sendResponse)=> {
             if (!args.model ){
                 return sendResponse({
                     isValid: false,

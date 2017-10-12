@@ -21,7 +21,7 @@ module.exports = function(service){
         apiControllers.push(require(`${__dirname}/../common/${apiFile}`)(self, mongoose));
     });
 
-    if (self.config.usersEngine || true){
+    if (self.config.usersEngine){
 
         let usersApiFiles = fs.readdirSync(`${__dirname}/../users`);
         usersApiFiles.forEach((apiFile)=>{
@@ -49,6 +49,8 @@ module.exports = function(service){
             })
         });
     }
+
+    console.log(apiControllers);
 
     // security middleware
     if (self.config.usersEngine) {
@@ -84,7 +86,7 @@ module.exports = function(service){
                                 });
                             }
                         }
-                        apiConrollerMember.worker(args, ack);
+                        apiConrollerMember.worker(client, args, ack);
                     });
                 })
             }else {
@@ -103,7 +105,7 @@ module.exports = function(service){
                             });
                         }
                     }
-                    apiController.worker(args, ack);
+                    apiController.worker(client, args, ack);
                 });
             }
         });
