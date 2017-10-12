@@ -57,55 +57,72 @@ module.exports = function(service){
     self.connections = {};
     /* What to do if some user is connected? */
     self.io.sockets.on('connection', function (client) {
-        if (client.user && client.user.me) {
-            if (!self.connections[client.user.me._id]){
-                self.connections[client.user.me._id] = [];
+        if (self.config.usersEngine) {
+            if (client.user && client.user.me) {
+                if (!self.connections[client.user.me._id]) {
+                    self.connections[client.user.me._id] = [];
+                }
+                self.connections[client.user.me._id].push(client);
             }
-            self.connections[client.user.me._id].push(client);
         }
         /*for each controller registered in api, attach the event and worker*/
         apiControllers.forEach((apiController)=>{
             if (apiController.constructor === Array){
                 apiController.forEach((apiConrollerMember)=>{
-                    if (!client.user && !client.user.me && !apiConrollerMember.public) {
-                        return;
+                    if (self.config.usersEngine) {
+                        if (!client.user && !client.user.me && !apiConrollerMember.public) {
+                            return;
+                        }
                     }
                     client.on(apiConrollerMember.event, (args, ack)=> {
-                        if (client.user && client.user.me) {
-                            console.log("User authenticated");
-                            client.user.session.validAt = new Date();
-                            client.user.session.save((err)=>{console.log("update session",err)});
+                        if (self.config.usersEngine) {
+                            if (client.user && client.user.me) {
+                                console.log("User authenticated");
+                                client.user.session.validAt = new Date();
+                                client.user.session.save((err) => {
+                                    console.log("update session", err)
+                                });
+                            }
                         }
                         apiConrollerMember.worker(args, ack);
                     });
                 })
             }else {
-                if (!client.user && !client.user.me && !apiController.public) {
-                    return;
+                if (self.config.usersEngine) {
+                    if (!client.user && !client.user.me && !apiController.public) {
+                        return;
+                    }
                 }
                 client.on(apiController.event, (args, ack)=> {
-                    if (client.user && client.user.me) {
-                        console.log("User authenticated");
-                        client.user.session.validAt = new Date();
-                        client.user.session.save((err)=>{console.log("update session",err)});
+                    if (self.config.usersEngine) {
+                        if (client.user && client.user.me) {
+                            console.log("User authenticated");
+                            client.user.session.validAt = new Date();
+                            client.user.session.save((err) => {
+                                console.log("update session", err)
+                            });
+                        }
                     }
                     apiController.worker(args, ack);
                 });
             }
         });
+        if (self.config.usersEngine) {
+            if (client.user && client.user.me) {
+                let _me = client.user.me.toObject();
+                _me.password = '****';
 
-        if (client.user && client.user.me) {
-            let _me = client.user.me.toObject();
-            _me.password = '****';
-
-            client.emit('welcome', {isValid: true, user: _me, session: client.user.session.toObject()});
+                client.emit('welcome', {isValid: true, user: _me, session: client.user.session.toObject()});
+            }
         }
 
         client.on('disconnect', () => {
-            if (client.user && client.user.me) {
-                _.remove(self.connections[client.user.me._id], function (currConnection) {
-                    return currConnection.id === client.id;
-                });
+            if (self.config.usersEngine) {
+                if (client.user && client.user.me) {
+                    _.remove(self.connections[client.user.me._id], function (currConnection) {
+                        return currConnection.id === client.id;
+                    });
+                }
             }
             client.disconnect();
         });
