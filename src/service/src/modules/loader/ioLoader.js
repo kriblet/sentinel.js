@@ -51,7 +51,9 @@ module.exports = function(service){
     }
 
     // security middleware
-    self.io.use(self.security.middleware);
+    if (self.config.usersEngine) {
+        self.io.use(self.security.middleware);
+    }
     self.connections = {};
     /* What to do if some user is connected? */
     self.io.sockets.on('connection', function (client) {
