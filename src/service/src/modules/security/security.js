@@ -2,8 +2,6 @@
  * Created by Ben on 03/06/2017.
  */
 
-const bcrypt = require("bcrypt");
-
 class Security {
     constructor(service) {
         this.service = service;
@@ -82,8 +80,8 @@ class Security {
                                             message: {isValid: false, error: 'Usuario no encontrado'}
                                         });
                                     } else {
-                                        let loginResult = bcrypt.compareSync(socket.user.password, user.password);
-                                        if (loginResult) {
+
+                                        if (false) {
                                             self.models.mongodb.users.populate(user, [{
                                                 path: 'information.country',
                                                 select: 'name',
