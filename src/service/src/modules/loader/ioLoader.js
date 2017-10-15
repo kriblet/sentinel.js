@@ -88,6 +88,11 @@ module.exports = function(service){
                         }
                         apiConrollerMember.worker(client, args, ack);
                     });
+                    self.app.post('/api/' + apiConrollerMember.event, (req, res)=>{
+                        apiConrollerMember.worker({
+                            handshake: {session: req.user}
+                        }, req.params, res.json);
+                    });
                 })
             }else {
                 if (self.config.usersEngine) {
@@ -106,6 +111,11 @@ module.exports = function(service){
                         }
                     }
                     apiController.worker(client, args, ack);
+                });
+                self.app.post('/api/' + apiConrollerMember.event, (req, res)=>{
+                    apiConrollerMember.worker({
+                        handshake: {session: req.user}
+                    }, req.params, res.json);
                 });
             }
         });
