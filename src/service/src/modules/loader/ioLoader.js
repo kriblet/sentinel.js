@@ -57,6 +57,12 @@ module.exports = function(service){
         self.io.use(self.security.middleware);
     }
     self.connections = {};
+
+    let middleware = (req, res, next)=>{
+        next();
+    };
+    middleware = middleware || self.middleware;
+
     /* What to do if some user is connected? */
     self.io.sockets.on('connection', function (client) {
         if (self.config.usersEngine) {
@@ -88,7 +94,9 @@ module.exports = function(service){
                         }
                         apiConrollerMember.worker(client, args, ack);
                     });
-                    self.app.post('/api/' + apiConrollerMember.event, (req, res)=>{
+                    let route = '/realtime/api/' + apiConrollerMember.event;
+                    self.logger.info(route, 'registered as restapi');
+                    self.app.post(route,  middleware, (req, res)=>{
                         apiConrollerMember.worker({
                             handshake: {session: req.user}
                         }, req.params, res.json);
@@ -112,7 +120,9 @@ module.exports = function(service){
                     }
                     apiController.worker(client, args, ack);
                 });
-                self.app.post('/api/' + apiConrollerMember.event, (req, res)=>{
+                let route = '/realtime/api/' + apiConrollerMember.event;
+                self.logger.info(route, 'registered as restapi');
+                self.app.post(route, middleware, (req, res)=>{
                     apiConrollerMember.worker({
                         handshake: {session: req.user}
                     }, req.params, res.json);

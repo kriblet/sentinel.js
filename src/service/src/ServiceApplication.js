@@ -124,8 +124,6 @@ class ServiceApplication {
                         self.models = models;
                         self.security = new Security(self);
                         self.security.use(self.models);
-                        self.setHttpControllers();
-                        self.setIo();
                         self.setHandler();
                         if (self.config.directories.webApp) {
                             let stat = fs.lstatSync(self.config.directories.webApp);
@@ -145,6 +143,8 @@ class ServiceApplication {
                                 }
                             }
                         }
+                        self.setHttpControllers();
+                        self.setIo();
 
                     })
                     .catch((err)=>{
