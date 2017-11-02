@@ -13,14 +13,14 @@ const express           = require("express"),
 
 const logger = new (winston.Logger)({
     levels: {
-        'info': 0,
-        'debug': 1,
-        'warn': 2,
-        'error': 3
+        'error': 0,
+        'warn': 1,
+        'info': 2,
+        'debug': 3,
     },
     colors: {
-        'info': 'cyan',
         'debug': 'gray',
+        'info': 'cyan',
         'warn': 'yellow',
         'error': 'red'
     },
@@ -43,6 +43,9 @@ const logger = new (winston.Logger)({
 class ServiceApplication {
     constructor(options = null){
         this.logger = logger;
+        this.logger.transports.console.level = options.config.logLevel ;
+        this.logger.transports.file.level = options.config.logLevel ;
+
         this.app = app;
         this.server = server;
         this.hostname = os.hostname();
@@ -76,7 +79,7 @@ class ServiceApplication {
                     /* Starts the app */
                     let port = process.env.PORT || self.config.host.port || 8081;
                     self.server.listen(port, () => {
-                        console.log(`SentinelJs listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
+                        self.logger.info(`SentinelJs listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
                         self.status = "Running";
                         resolve();
                     });
@@ -129,7 +132,7 @@ class ServiceApplication {
                 self.dataConnectors[connId].close();
             });
             self.status = "Stopped";
-            console.log("Service Stopped Successfully");
+            self.logger.info("Service Stopped Successfully");
             resolve();
         });
     }

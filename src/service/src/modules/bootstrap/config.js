@@ -16,7 +16,6 @@ module.exports = function(service = null, config = null){
     }
 
     self.config = config;
-    self.logger.level = self.config.logLevel;
     self.logger.info('Adding configuration');
 
     /* Express api app configuration*/

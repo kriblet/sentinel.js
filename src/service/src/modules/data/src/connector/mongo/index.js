@@ -7,6 +7,8 @@ const mongoose = require("mongoose"),
     ConnectorTypes = require(__dirname + '/../common/ConnectorTypes'),
     ConnectorBase = require(__dirname + '/../common/ConnectorBase');
 
+mongoose.promise = Promise;
+
 class MongoConnector extends ConnectorBase{
     /**
      * Constructor, args are the configuration parameters.
@@ -34,14 +36,15 @@ class MongoConnector extends ConnectorBase{
      */
     connect(){
         let options = {
+            useMongoClient: true,
             server: {
                 auto_reconnect: true
             },
             uri_decode_auth: true
         };
         let mongoUrl = `mongodb://${this.options.username ? this.options.username + ':' + this.options.password + '@' : ''}${this.options.host}:${this.options.port}/${this.options.database}${this.options.username ? '?authSource=admin' : ''}`;
-        console.log("Connnecting", mongoUrl);
-        return this.connection.open(mongoUrl,options);
+
+        return this.connection.open(mongoUrl, options);
     }
 
     /**

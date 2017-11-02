@@ -40,6 +40,20 @@ module.exports = function(service){
         });
     }
 
+    if (apiControllers.length > 0){
+        self.logger.debug('Realtime controllers ready');
+        self.logger.debug('-- realtime');
+        apiControllers.forEach((c)=>{
+            if (c.constructor === Array){
+                c.forEach((ac)=>{
+                    self.logger.debug(`-- -- ${ac.event}`);
+                })
+            }else {
+                self.logger.debug(`-- -- ${c.event}`);
+            }
+        })
+    }
+
     self.connections = {};
 
     /* What to do if some user is connected? */
@@ -48,12 +62,16 @@ module.exports = function(service){
         apiControllers.forEach((apiController)=>{
             if (apiController.constructor === Array){
                 apiController.forEach((apiConrollerMember)=>{
+                    self.logger.debug(`event[${apiConrollerMember.event}] attached to socket[${client.id}]`);
                     client.on(apiConrollerMember.event, (args, ack)=> {
+                        self.logger.debug(`event[${apiConrollerMember.event}] fired on socket[${client.id}]`);
                         apiConrollerMember.worker(client, args, ack);
                     });
                 })
             }else {
+                self.logger.debug(`event[${apiController.event}] attached to socket[${client.id}]`);
                 client.on(apiController.event, (args, ack)=> {
+                    self.logger.debug(`event[${apiController.event}] fired on socket[${client.id}]`);
                     apiController.worker(client, args, ack);
                 });
             }

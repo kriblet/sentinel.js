@@ -11,6 +11,8 @@ const ora = require('ora');
 const path = require('path');
 
 const ROOTPATH = process.cwd();
+const sentinelFileConfig = ROOTPATH + "/.sentinel.config.json";
+
 
 let printSentinel = function(){
     console.log("\n" +
@@ -24,6 +26,7 @@ let printSentinel = function(){
         "                                                      \n");
 };
 
+
 let server = {
     start: function(debug, config, clusters){
         let spinner = ora('Initializing...').start();
@@ -36,42 +39,75 @@ let server = {
             args.push("--config");
             args.push(config);
         }
-        let execMode = clusters && clusters > 1 ? 'cluster' : null;
-        return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
-            return pm2.connectAsync().then(() => {
-                return pm2.startAsync({
-                    name: 'sentinel',
-                    script: `${__dirname}/index.js`,
-                    cwd: ROOTPATH,
-                    args: args,
-                    execMode: execMode,
-                    instances: clusters,
-                    output: path.join(ROOTPATH, './logs/sentinel-output.log'),
-                    error: path.join(ROOTPATH, './logs/sentinel-error.log'),
-                    minUptime: 5000,
-                    maxRestarts: 5
-                }).then((res) => {
-                    spinner.succeed('Sentinel.js has started successfully.');
+
+        var localConfig;
+
+        if (config){
+            localConfig = require(`${ROOTPATH}/${config}`);
+        }else{
+            localConfig = require(`${process.cwd()}/config`);
+        }
+
+        let _conf = null;
+
+        if (!debug) {
+            _conf = localConfig.production;
+        }else{
+            _conf = localConfig.development;
+            _conf.debug = true;
+        }
+
+        let appName =  _conf.appName || 'sentinel';
+        let toSave = {appName: appName};
+
+        fs.writeFile(sentinelFileConfig, JSON.stringify(toSave), function(err) {
+            if (err){
+                throw err;
+            }
+
+
+            let execMode = clusters && clusters > 1 ? 'cluster' : null;
+            return fs.emptyDirAsync(path.join(ROOTPATH, './logs')).then(() => {
+                return pm2.connectAsync().then(() => {
+                    return pm2.startAsync({
+                        name: appName,
+                        script: `${__dirname}/index.js`,
+                        cwd: ROOTPATH,
+                        args: args,
+                        execMode: execMode,
+                        instances: clusters,
+                        output: path.join(ROOTPATH, './logs/sentinel-output.log'),
+                        error: path.join(ROOTPATH, './logs/sentinel-error.log'),
+                        minUptime: 5000,
+                        maxRestarts: 5
+                    }).then((res) => {
+                        spinner.succeed(`${appName} has started successfully.`);
+                    }).catch((err)=>{
+                        spinner.fail(err);
+                        process.exit(1);
+                    }).finally(() => {
+                        pm2.disconnect();
+                    })
                 }).catch((err)=>{
                     spinner.fail(err);
                     process.exit(1);
-                }).finally(() => {
-                    pm2.disconnect();
                 })
-            }).catch((err)=>{
+            }).catch(err => {
                 spinner.fail(err);
                 process.exit(1);
-            })
-        }).catch(err => {
-            spinner.fail(err);
-            process.exit(1);
+            });
+
         });
+
     },
     stop: function(){
-        let spinner = ora('Shutting down Sentinel.js...').start();
+
+        let appName = JSON.parse(fs.readFileSync(sentinelFileConfig)).appName;
+
+        let spinner = ora(`Shutting down ${appName}`).start();
         return pm2.connectAsync().then(() => {
-            return pm2.stopAsync('sentinel').then(() => {
-                spinner.succeed('Sentinel.js has stopped successfully.');
+            return pm2.stopAsync(appName).then(() => {
+                spinner.succeed(`${appName} has stopped successfully.`);
             }).finally(() => {
                 pm2.disconnect();
             })
@@ -81,10 +117,12 @@ let server = {
         })
     },
     restart: function(){
-        let spinner = ora('Restarting Sentinel.js...').start();
+        let appName = JSON.parse(fs.readFileSync(sentinelFileConfig)).appName;
+
+        let spinner = ora(`Restarting [${appName}]`).start();
         return pm2.connectAsync().then(() => {
-            pm2.gracefulReloadAsync("sentinel").then(()=>{
-                spinner.succeed('Sentinel.js has resatrted successfully.');
+            pm2.gracefulReloadAsync(appName).then(()=>{
+                spinner.succeed(`${appName} has restarted successfully.`);
             }).catch((err)=>{
                 spinner.fail(err);
                 process.exit(1);
@@ -97,10 +135,12 @@ let server = {
         })
     },
     delete: function() {
-        let spinner = ora('Removing Sentinel.js...').start();
+        let appName = JSON.parse(fs.readFileSync(sentinelFileConfig)).appName;
+
+        let spinner = ora(`Removing [${appName}]`).start();
         return pm2.connectAsync().then(() => {
-            pm2.deleteAsync("sentinel").then(() => {
-                spinner.succeed('Sentinel.js has been removed successfully.');
+            pm2.deleteAsync(appName).then(() => {
+                spinner.succeed(`${appName} has been removed successfully.`);
             }).catch((err) => {
                 spinner.fail(err);
                 process.exit(1);
@@ -113,9 +153,11 @@ let server = {
         })
     },
     status: function() {
-        let spinner = ora('Verifying Sentinel.js...').start();
+        let appName = JSON.parse(fs.readFileSync(sentinelFileConfig)).appName;
+
+        let spinner = ora(`Verifying ${appName}...`).start();
         return pm2.connectAsync().then(() => {
-            pm2.describeAsync("sentinel").then((result) => {
+            pm2.describeAsync(appName).then((result) => {
                 if (result.length > 0){
                     spinner.succeed(`${result[0].name} => CPU ${result[0].monit.cpu}% | ${(result[0].monit.memory / 1048576).toFixed(2)}MB used`);
                 }else{
@@ -133,9 +175,11 @@ let server = {
         })
     },
     log: function() {
-        let spinner = ora('Watching Sentinel, CTRL+C to exit').start();
+        let appName = JSON.parse(fs.readFileSync(sentinelFileConfig)).appName;
+
+        let spinner = ora(`Watching ${appName}, CTRL+C to exit`).start();
         return pm2.connectAsync().then(() => {
-            pm2.streamLogs("sentinel");
+            pm2.streamLogs(appName);
 
         }).catch((err) => {
             spinner.fail(err);

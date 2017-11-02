@@ -63,3 +63,5 @@ local
 
 
 test_project
+
+.sentinel.config.json
