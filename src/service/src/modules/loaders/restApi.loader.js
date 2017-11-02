@@ -12,6 +12,7 @@ module.exports = function(service){
 };
 
 function _setHttpControllers(service, directories){
+
     let self = service;
     directories.forEach((apiRoute)=>{
         let apiFiles = fs.readdirSync(`${apiRoute}`);
@@ -54,6 +55,7 @@ function _setHttpControllers(service, directories){
                 }
                 self.existingRoutes[httpControllersController.type || 'get'] = self.existingRoutes[httpControllersController.type || 'get'].concat(endpoints);
                 self.app[httpControllersController.type || 'get'](endpoints, httpControllersController.middleware || null, httpControllersController.worker);
+
             });
         });
     });

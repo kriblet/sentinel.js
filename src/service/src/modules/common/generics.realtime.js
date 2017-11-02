@@ -3,7 +3,6 @@
  */
 
 let listControllers = (service)=>{
-
     return [{
         /**
          * Event get gets from model by filters

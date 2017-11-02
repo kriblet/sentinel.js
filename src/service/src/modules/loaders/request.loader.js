@@ -25,10 +25,7 @@ module.exports = function(service){
             headers['X-Powered-By'] = "SentinelJS";
 
             headers["Access-Control-Allow-Methods"] = "GET,POST,UPDATE,DELETE,OPTIONS";
-            headers['Access-Control-Allow-Headers'] = 'origin, X-Requested-With, Content-Type, Accept, Content-Length, x-app-id, x-session-id';
-            if (self.config.usersEngine || true) {
-                headers['Access-Control-Allow-Headers'] += ', x-app-id, x-session-id';
-            }
+            headers['Access-Control-Allow-Headers'] = 'origin, X-Requested-With, Content-Type, Accept, Content-Length';
 
             res.writeHead(200, headers);
             res.end();

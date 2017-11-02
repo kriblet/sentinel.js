@@ -2,16 +2,12 @@
  * Created by Ben on 02/06/2017.
  */
 const express           = require("express"),
-    loader              = require(`${__dirname}/modules/loader`),
-    Security            = require(`${__dirname}/modules/security`),
+    bootstrapper        = require(__dirname + '/modules/bootstrap'),
+    loader              = require(`${__dirname}/modules/loaders`),
     app                 = express(),
     http                = require('http'),
-    compression         = require('compression'),
-    bodyParser          = require("body-parser"),
     server              = http.createServer(app),
     os                  = require('os'),
-    fs                  = require('fs'),
-    data                = require(`${__dirname}/../../data`),
     winston             = require('winston'),
     _                   = require('lodash');
 
@@ -52,7 +48,6 @@ class ServiceApplication {
         this.hostname = os.hostname();
         this.express = express;
         this.config(options.config);
-
     }
 
     /**
@@ -60,101 +55,8 @@ class ServiceApplication {
      * @param config
      */
     config(config = null){
-        let self = this;
-
-        if (!config){
-            throw new Error("Configuration is not set for Service Application");
-        }
-        self.config = config;
-
-        self.logger.level = self.config.logLevel;
-
-        self.logger.info('Adding configuration');
-
-        /* Express api app configuration*/
-        self.app.use( compression()) ;
-        self.app.use( bodyParser.json() );
-        self.app.use( bodyParser.urlencoded({"extended": false}) );
-
-
-
-        /* Set default headers for express api app */
-        self.app.use(function (req, res, next) {
-            res.header('X-Powered-By', "SentinelJS");
-            if (self.config.security.disableFrameEmbedding){
-                Security.disableFrameEmbedding(res);
-            }
-            if (self.config.security.disableMimeSniffing){
-                Security.disableMimeSniffing(res);
-            }
-            if (self.config.security.enableXssFilter){
-                Security.enableXssFilter(res);
-            }
-            if (self.config.security.disableIeCompatibility){
-                Security.disableIeCompatibility(res);
-            }
-            next();
-        });
-
-        /*Connects to mongodb database (name of db config)*/
-        self.connectors =        new data.Connector(self.config.db /* db configuration for development */);
-
-        let promises = [];
-        Object.keys(self.connectors.connectors).forEach((conn)=>{
-            promises.push(self.connectors.connectors[conn].connect());
-        });
-
-        Promise.all(promises)
-            .then(() => {
-                if (self.config.usersEngine) {
-                    if (!self.config.directories.models.mongodb){
-                        throw new Error("No mongodb database available.");
-                    }
-                    self.config.directories.models.mongodb.push(`${__dirname}/modules/users/models`);
-                }
-                /*Prepares all models existing in folder models... with extension of name sql / mongodb */
-                data.Models.prepare(self.connectors.connectors, self)
-                    .then((models) => {
-                        self.dataConnectors = {};
-                        Object.keys(self.connectors.connectors).forEach((connId)=> {
-
-                            self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
-                        });
-
-                        self.models = models;
-                        self.security = new Security(self);
-                        self.security.use(self.models);
-                        self.setHandler();
-                        if (self.config.directories.webApp) {
-                            let stat = fs.lstatSync(self.config.directories.webApp);
-                            if (stat.isDirectory()){
-                                try{
-                                    let webApp = require(self.config.directories.webApp);
-                                    if (webApp.use){
-                                        webApp.use(self);
-                                    }else{
-                                        webApp(self);
-                                    }
-                                    self.logger.info(`Web application with external express @ ${self.config.directories.webApp}`);
-                                }catch(err){
-                                    console.error(err);
-                                    self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
-                                    self.logger.info(`Adding static routes for ${self.config.directories.webApp}`);
-                                }
-                            }
-                        }
-                        self.setHttpControllers();
-                        self.setIo();
-
-                    })
-                    .catch((err)=>{
-                        self.logger.error(err);
-                    });
-            })
-            .catch((err)=>{
-                self.logger.error(err);
-            });
-
+        bootstrapper.config(this, config);
+        bootstrapper.security(this);
     }
 
     /**
@@ -163,13 +65,25 @@ class ServiceApplication {
     start(){
         let self = this;
         return new Promise((resolve,reject)=> {
-            /* Starts the app */
-            let port = process.env.PORT || self.config.host.port || 8081;
-            self.server.listen(port, () => {
-                console.log(`Server listening at port ${port} \nWebServer listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
-                self.status = "Running";
-                resolve();
-            });
+
+            bootstrapper.connections(self)
+                .then(function(){
+                    /**
+                     * handler for incoming requests.
+                     */
+                    self.setHandler();
+
+                    /* Starts the app */
+                    let port = process.env.PORT || self.config.host.port || 8081;
+                    self.server.listen(port, () => {
+                        console.log(`SentinelJs listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
+                        self.status = "Running";
+                        resolve();
+                    });
+
+                })
+                .catch(reject);
+
         });
     }
 
