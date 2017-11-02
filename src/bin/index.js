@@ -39,8 +39,9 @@ if (!options.debug) {
 options.config = _conf;
 
 
-const ServiceApplication        = require(`${__dirname}/../service`);
+const ServiceApplication = require(`${__dirname}/../service`);
 let app = new ServiceApplication(options);
+
 app.start()
     .then(()=> {
         process.on('SIGINT', function () {
