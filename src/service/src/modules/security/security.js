@@ -6,7 +6,6 @@ class Security {
     constructor(service) {
         this.service = service;
     }
-
     static disableFrameEmbedding(res) {
         // -> Disable Frame Embedding
         res.set('X-Frame-Options', 'deny');
