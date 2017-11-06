@@ -41,8 +41,8 @@ module.exports = (sqlConnector, service, callback)=>{
                 models[modelName.replace(".js","")].isPublic = model.public || false;
             }
         });
-        if (service.config.directories.models && service.config.directories.models.sql){
-            service.config.directories.models.sql.forEach((customRoute)=>{
+        if (service.config.models && service.config.models.sql){
+            service.config.models.sql.forEach((customRoute)=>{
                 let customModels = fs.readdirSync(customRoute);
                 customModels.forEach((customModelName)=>{
                     let model = require(`${customRoute}/${customModelName}`)(sqlConnector.getConnection(), Sequelize.DataTypes, service);

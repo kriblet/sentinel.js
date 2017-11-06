@@ -43,7 +43,6 @@ class MongoConnector extends ConnectorBase{
             uri_decode_auth: true
         };
         let mongoUrl = `mongodb://${this.options.username ? this.options.username + ':' + this.options.password + '@' : ''}${this.options.host}:${this.options.port}/${this.options.database}${this.options.username ? '?authSource=admin' : ''}`;
-
         return this.connection.open(mongoUrl, options);
     }
 

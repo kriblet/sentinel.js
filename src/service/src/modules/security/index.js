@@ -4,3 +4,5 @@
 
 
 module.exports = require(`${__dirname}/security`);
+
+module.exports.bootstrapper = require(`${__dirname}/security.bootstrapper`);

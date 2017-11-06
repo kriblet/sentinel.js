@@ -2,7 +2,7 @@
 var Security;
 
 
-Security = require(`${__dirname}/../security`);
+Security = require(`${__dirname}/security`);
 
 
 module.exports = function(service = null){

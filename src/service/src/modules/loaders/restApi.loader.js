@@ -5,10 +5,11 @@ module.exports = function(service){
     let self = service;
     self.existingRoutes = {};
 
-    if (!self.config.directories.httpControllers){
+    let httpControllersPath = self.config.controllers.http;
+    if (!httpControllersPath){
         return;
     }
-    _setHttpControllers(self, self.config.directories.httpControllers);
+    _setHttpControllers(self, httpControllersPath);
 };
 
 function _setHttpControllers(service, directories){

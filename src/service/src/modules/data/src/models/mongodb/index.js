@@ -29,53 +29,41 @@ module.exports = (mongodbConnector, service, callback)=>{
     }catch(err){
     }
 
-    fs.readdir(`${__dirname}`, (err, mongodbModels)=>{
-        let models = {};
-        mongodbModels.forEach((modelName)=>{
-            if (modelName !== "index.js" && modelName.indexOf(".js") > -1){
-                /**
-                 * creates each model instance
-                 */
-                let model = require(`${_directory}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
-                models[modelName.replace(".js","")] = model.model;
-                models[modelName.replace(".js","")].isPublic = model.public;
-
-            }
-        });
-        if (service.config.directories.models && service.config.directories.models.mongodb){
-            service.config.directories.models.mongodb.forEach((customRoute)=>{
-                let customModels = fs.readdirSync(customRoute);
-                customModels.forEach((customModelName)=>{
-                    let model = require(`${customRoute}/${customModelName}`)(mongodbConnector.getConnection(), mongoose, service);
-                    models[customModelName.replace(".js","")] = model.model;
-                    models[customModelName.replace(".js","")].isPublic = model.public;
-                })
+    let models = {};
+    if (service.config.models && service.config.models.mongodb){
+        service.config.models.mongodb.forEach((customRoute)=>{
+            let customModels = fs.readdirSync(customRoute);
+            customModels.forEach((customModelName)=>{
+                let model = require(`${customRoute}/${customModelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                models[customModelName.replace(".js","")] = model.model;
+                models[customModelName.replace(".js","")].isPublic = model.public;
             })
-        }
+        })
+    }
 
-        let response = {};
-        response.mongodb = models;
-        /**
-         * checks if there is connection specific models.
-         */
-        if (objectName){
-            fs.readdir(`${_directory }`, (err, mongodbModels)=>{
-                let models = {};
-                mongodbModels.forEach((modelName)=>{
-                    if (modelName !== "index.js" && modelName.indexOf(".js") > -1){
-                        /**
-                         * creates each model instance
-                         */
-                        let model = require(`${_directory}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
-                        models[modelName.replace(".js","")] = model.model;
-                        models[modelName.replace(".js","")].isPublic = model.public;
-                    }
-                });
-                response[objectName] = models;
-                callback(response);
+    let response = {};
+    response.mongodb = models;
+    /**
+     * checks if there is connection specific models.
+     */
+    if (objectName){
+        fs.readdir(`${_directory }`, (err, mongodbModels)=>{
+            let models = {};
+            mongodbModels.forEach((modelName)=>{
+                if (modelName !== "index.js" && modelName.indexOf(".js") > -1){
+                    /**
+                     * creates each model instance
+                     */
+                    let model = require(`${_directory}/${modelName}`)(mongodbConnector.getConnection(), mongoose, service);
+                    models[modelName.replace(".js","")] = model.model;
+                    models[modelName.replace(".js","")].isPublic = model.public;
+                }
             });
-        }else{
+            response[objectName] = models;
             callback(response);
-        }
-    });
+        });
+    }else{
+        callback(response);
+    }
+
 };

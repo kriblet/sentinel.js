@@ -24,11 +24,13 @@ module.exports = function(service = null){
                 /*Prepares all models existing in folder models... with extension of name sql / mongodb */
                 data.Models.prepare(self.connectors.connectors, self)
                     .then((models) => {
-                        self.dataConnectors = {};
+                        self.connections = {};
                         Object.keys(self.connectors.connectors).forEach((connId)=> {
-                            self.dataConnectors[connId] = self.connectors.connectors[connId].getConnection();
+                            self.logger.info(`Connection ${connId} ready and attached to Service`);
+                            self.connections[connId] = self.connectors.connectors[connId].getConnection();
                         });
                         self.logger.info('Models are prepared and ready to be used');
+
                         Object.keys(models).forEach((dbName)=>{
                             self.logger.debug(`${dbName} available models`);
                             self.logger.debug(`-- ${dbName}`);
@@ -37,39 +39,21 @@ module.exports = function(service = null){
                             })
                         });
                         self.models = models;
-                        self.setHttpControllers();
-                        self.setIo();
 
-                        if (self.config.directories.webApp) {
-                            let stat = fs.lstatSync(self.config.directories.webApp);
-                            if (stat.isDirectory()){
-                                try{
-                                    let webApp = require(self.config.directories.webApp);
-
-                                    self.logger.info('Using external web services for WebApp');
-
-                                    if (webApp.use){
-                                        webApp.use(self);
-                                    }else{
-                                        webApp(self);
-                                    }
-                                    resolve();
-                                }catch(err){
-                                    self.app.use(`/${self.config.host.webServerRoute}`, express.static(self.config.directories.webApp));
-                                    self.logger.info(`Adding static routes for ${self.config.directories.webApp}`);
-                                    resolve();
-                                }
-                            }
-                        }
+                        process.nextTick(resolve);
                     })
                     .catch((err)=>{
-                        self.logger.error(err);
-                        reject(err);
+                        process.nextTick(()=>{
+                            self.logger.error(err);
+                            reject(err);
+                        });
                     });
             })
             .catch((err)=>{
-                self.logger.error(err);
-                reject(err);
+                process.nextTick(()=>{
+                    self.logger.error(err);
+                    reject(err);
+                });reject(err);
             });
     });
 

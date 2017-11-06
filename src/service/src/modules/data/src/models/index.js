@@ -46,9 +46,15 @@ module.exports.prepare = (connectors, service)=>{
             }
         },(err)=>{
             if(err){
-                reject(err);
+                process.nextTick(()=>{
+                    service.logger.error(err);
+                    reject(err);
+                });
             }else{
-                resolve(models);
+                process.nextTick(()=>{
+                    resolve(models);
+                });
+
             }
         });
 

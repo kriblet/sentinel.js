@@ -12,20 +12,29 @@ module.exports = function(service){
                 req.headers.origin = 'chrome-extension://';
             }
 
-            if (req.headers.origin) {
+            if (req.headers.origin && !self.config.host.cors) {
                 self.config.allowedDomains.forEach(function (domain) {
                     if (req.headers.origin.indexOf(domain) > -1) {
                         headers['Access-Control-Allow-Origin'] = req.headers.origin;
                         headers['Access-Control-Allow-Credentials'] = 'true';
                     }
                 });
+            }else if (self.config.host.cors){
+                headers['Access-Control-Allow-Origin'] = '*';
+                headers['Access-Control-Allow-Credentials'] = 'true';
             }
 
             headers['Content-Type'] = "application/json; charset=utf-8";
-            headers['X-Powered-By'] = "SentinelJS";
+            headers['X-Powered-By'] = self.config.host.poweredBy || "SentinelJS";
 
             headers["Access-Control-Allow-Methods"] = "GET,POST,UPDATE,DELETE,OPTIONS";
+
+            let customHeaders = '';
+            if (self.config.security.allowedHeaders){
+                customHeaders = self.config.security.allowedHeaders.join(',');
+            }
             headers['Access-Control-Allow-Headers'] = 'origin, X-Requested-With, Content-Type, Accept, Content-Length';
+            headers['Access-Control-Allow-Headers'] += `,${customHeaders}`;
 
             res.writeHead(200, headers);
             res.end();

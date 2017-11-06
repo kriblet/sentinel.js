@@ -2,54 +2,40 @@
  * Created by Ben on 02/06/2017.
  */
 const express           = require("express"),
-    bootstrapper        = require(__dirname + '/modules/bootstrap'),
-    loader              = require(`${__dirname}/modules/loaders`),
     app                 = express(),
     http                = require('http'),
     server              = http.createServer(app),
     os                  = require('os'),
-    winston             = require('winston'),
+    logger              = require(`${__dirname}/modules/logger`),
+    bootstrapper        = require(`${__dirname}/modules/bootstrap`),
+    loader              = require(`${__dirname}/modules/loaders`),
     _                   = require('lodash');
 
-const logger = new (winston.Logger)({
-    levels: {
-        'error': 0,
-        'warn': 1,
-        'info': 2,
-        'debug': 3,
-    },
-    colors: {
-        'debug': 'gray',
-        'info': 'cyan',
-        'warn': 'yellow',
-        'error': 'red'
-    },
-    transports: [
-        new (winston.transports.Console)({
-            colorized: true,
-            timestamp: true
-        }),
-        new (winston.transports.File)({
-            filename: 'sentinel.log'
-        })
-    ]
-});
+
 
 
 
 /**
- * Service application to listen all users providing an idle connection until they got any kind of notifications.
+ * Service application
  */
 class ServiceApplication {
     constructor(options = null){
+
+        this.app = app;
+
+        /* logger set up */
         this.logger = logger;
         this.logger.transports.console.level = options.config.logLevel ;
         this.logger.transports.file.level = options.config.logLevel ;
+        /* attach logger to express app */
+        this.logger.attach(this);
 
-        this.app = app;
+        /* server set up */
         this.server = server;
         this.hostname = os.hostname();
         this.express = express;
+
+        /* whole app configuration */
         this.config(options.config);
     }
 
@@ -58,6 +44,7 @@ class ServiceApplication {
      * @param config
      */
     config(config = null){
+        /* bootstrap the app */
         bootstrapper.config(this, config);
         bootstrapper.security(this);
     }
@@ -68,22 +55,32 @@ class ServiceApplication {
     start(){
         let self = this;
         return new Promise((resolve,reject)=> {
-
             bootstrapper.connections(self)
                 .then(function(){
-                    /**
-                     * handler for incoming requests.
-                     */
-                    self.setHandler();
+                    self.setHttpControllers();
+                    self.setIo();
+                    bootstrapper.plugins(self)
+                        .then(function(plugins){
+                            /* plugins exposure to all Service */
+                            self.plugins = plugins;
+                            bootstrapper.webServer(self)
+                                .then(()=>{
+                                    /* sets the custom request handler */
+                                    self.setHandler();
 
-                    /* Starts the app */
-                    let port = process.env.PORT || self.config.host.port || 8081;
-                    self.server.listen(port, () => {
-                        self.logger.info(`SentinelJs listening at http://${self.hostname}:${port}/${self.config.host.webServerRoute}`);
-                        self.status = "Running";
-                        resolve();
-                    });
-
+                                    /* Starts the app */
+                                    let port = process.env.PORT || self.config.host.port || 8081;
+                                    self.server.listen(port, () => {
+                                        if (self.config.webServer && self.config.webServer.path) {
+                                            self.logger.info(`SentinelJs Web Server listening at http://${self.hostname}:${port}/${self.config.webServer.route}`);
+                                        }
+                                        self.logger.info(`SentinelJs Application listening at http://${self.hostname}:${port}/`);
+                                        self.status = "Running";
+                                        resolve();
+                                    });
+                                });
+                        })
+                        .catch(reject);
                 })
                 .catch(reject);
 
@@ -123,13 +120,13 @@ class ServiceApplication {
     stop(){
         let self = this;
         return new Promise((resolve, reject)=>{
-            Object.keys(self.connections).forEach(function(clientId) {
-                self.connections[clientId].forEach((client)=>{
+            Object.keys(self.io.connections).forEach(function(clientId) {
+                self.connections.io[clientId].forEach((client)=>{
                     client.disconnect();
                 });
             });
-            Object.keys(self.dataConnectors).forEach((connId)=> {
-                self.dataConnectors[connId].close();
+            Object.keys(self.connections).forEach((connId)=> {
+                self.connections[connId].close();
             });
             self.status = "Stopped";
             self.logger.info("Service Stopped Successfully");

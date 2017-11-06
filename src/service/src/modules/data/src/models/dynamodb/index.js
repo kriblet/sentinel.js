@@ -40,8 +40,8 @@ module.exports = (dynamodbConnector, service, callback)=>{
                 models[modelName.replace(".js","")].isPublic = model.public;
             }
         });
-        if (service.config.directories.models && service.config.directories.models.dynamo){
-            service.config.directories.models.dynamo.forEach((customRoute)=>{
+        if (service.config.models && service.config.models.dynamo){
+            service.config.models.dynamo.forEach((customRoute)=>{
                 let customModels = fs.readdirSync(customRoute);
                 customModels.forEach((customModelName)=>{
                     let model = require(`${customRoute}/${customModelName}`)(dynamodbConnector.getConnection(), dynamoose, service);
